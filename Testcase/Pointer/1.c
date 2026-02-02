@@ -7,8 +7,6 @@ void codegen() {
   *c = *c + 1; /* *c = 4, a = 4 */
   c = &b; /* *c = 16 */
   *c = b / a; /* *c = 4, b = 4 */
-  digitalWrite(29, HIGH);
-  delay(a * 1000 + 1000); /* 5 seconds */
-  digitalWrite(29, LOW);
-  delay(b * 1000 - 250 * 8); /* 2 seconds */
+  output(a + 1); // ans: 5
+  output(b - 2); // ans: 2
 }

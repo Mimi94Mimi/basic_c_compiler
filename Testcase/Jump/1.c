@@ -17,8 +17,6 @@ void codegen() {
     i = i + 1;
   } while (i < 7);
 
-  digitalWrite(28, HIGH);
-  delay((fib[6] - fib[3]) * 1000); // fib[6] - fib[3] = 6
-  digitalWrite(28, LOW);
-  delay((fib[5] - fib[1]) * 1000); // fib[5] - fib[1] = 4
+  output((fib[6] - fib[3])); // fib[6] - fib[3] = 6
+  output((fib[5] - fib[1])); // fib[5] - fib[1] = 4
 }

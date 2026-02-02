@@ -30,8 +30,6 @@ void codegen() {
     end = end + 1;
   }
 
-  digitalWrite(26, HIGH);
-  delay((data[0] - data[2]) * 1000); /* data[0] - data[2] = 3 */
-  digitalWrite(26, LOW);
-  delay((end - data[0]) * 1000); /* end - data[0] = 1 */
+  output((data[0] - data[2])); /* data[0] - data[2] = 3 */
+  output((end - data[0])); /* end - data[0] = 1 */
 }

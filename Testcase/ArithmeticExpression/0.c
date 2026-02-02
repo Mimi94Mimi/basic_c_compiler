@@ -3,8 +3,6 @@ void codegen()
 {
   int a = 1 + 2 * 1; // a = 3
   int b = (a + 3) / 2; // b = 3
-  digitalWrite(26, HIGH);
-  delay(a * 1000); // delay 3 seconds
-  digitalWrite(26, LOW);
-  delay(b * 1000); // delay 3 seconds
+  output(a); // ans: 3
+  output(b); // ans: 3
 }

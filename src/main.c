@@ -1,8 +1,7 @@
 #include <stdio.h>
 
 
-void delay(int ms);
-void digitalWrite(int pin, int value);
+void output(int val);
 void codegen() asm("codegen");
 
 int main()
@@ -12,14 +11,7 @@ int main()
 }
 
 
-void delay(int ms)
+void output(int val)
 {
-  printf("Arduino delay(%d);\n", ms);
+  printf("Output(%d);\n", val);
 }
-
-
-void digitalWrite(int pin, int value)
-{
-  printf("Arduino digitalWrite(%d, %d);\n", pin, value);
-}
-

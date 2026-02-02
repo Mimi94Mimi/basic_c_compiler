@@ -1,0 +1,5123 @@
+   0  $accept : end $end
+
+   1  end : _end
+   2      | end _end
+
+   3  _end : scalar_decl
+   4       | array_decl
+   5       | func_decl
+   6       | func_def
+
+   7  compound_stmt_func : '{' '}'
+
+   8  $$1 :
+
+   9  $$2 :
+
+  10  compound_stmt_func : '{' $$1 stmts $$2 '}'
+
+  11  compound_stmt : '{' '}'
+  12                | '{' stmts '}'
+
+  13  stmts : _stmt
+  14        | stmts _stmt
+
+  15  _stmt : stmt
+  16        | var_decl
+
+  17  $$3 :
+
+  18  $$4 :
+
+  19  $$5 :
+
+  20  for_stmt : FOR '(' expr ';' $$3 expr ';' $$4 expr ')' $$5 compound_stmt
+
+  21  $$6 :
+
+  22  $$7 :
+
+  23  while_stmt : WHILE '(' $$6 expr $$7 ')' compound_stmt
+
+  24  $$8 :
+
+  25  $$9 :
+
+  26  while_stmt : DO $$8 compound_stmt WHILE '(' expr $$9 ')' ';'
+
+  27  switch_stmt : SWITCH '(' expr ')' '{' switch_clauses '}'
+  28              | SWITCH '(' expr ')' '{' '}'
+
+  29  if_stmt : _if_stmt
+  30          | _if_stmt ELSE compound_stmt
+
+  31  $$10 :
+
+  32  _if_stmt : IF '(' expr ')' $$10 compound_stmt
+
+  33  switch_clauses : switch_clause
+  34                 | switch_clauses switch_clause
+
+  35  switch_clause : CASE expr ':'
+  36                | CASE expr ':' stmts
+  37                | DEFAULT ':'
+  38                | DEFAULT ':' stmts
+
+  39  stmt : compound_stmt
+  40       | for_stmt
+  41       | while_stmt
+  42       | switch_stmt
+  43       | if_stmt
+  44       | RETURN ';'
+  45       | RETURN expr ';'
+  46       | BREAK ';'
+  47       | CONTINUE ';'
+  48       | expr ';'
+
+  49  var_decl : scalar_decl
+  50           | array_decl
+  51           | func_decl
+
+  52  $$11 :
+
+  53  func_def : type ident '(' params ')' $$11 compound_stmt_func
+
+  54  func_decl : type ident '(' params ')' ';'
+
+  55  scalar_decl : type idents ';'
+
+  56  array_decl : type array ';'
+
+  57  idents : idents ',' _ident
+  58         | _ident
+
+  59  _ident : ident
+  60         | ident '=' expr
+
+  61  array : ident '[' INT ']'
+
+  62  params :
+  63         | _params
+
+  64  _params : param
+  65          | _params ',' param
+
+  66  param : type ID
+  67        | type '*' ID
+
+  68  ident : ID
+  69        | '*' ID
+
+  70  type : type1
+  71       | CONST type1
+  72       | CONST
+
+  73  type1 : type0
+  74        | SIGNED_OR_NOT type0
+  75        | SIGNED_OR_NOT
+  76        | KEY_OTHER_TYPE
+
+  77  type0 : KEY_INT
+  78        | LONG_OR_SHORT KEY_INT
+  79        | LONG_OR_SHORT
+  80        | KEY_CHAR
+
+  81  expr : _expr
+  82       | expr '+' expr
+  83       | expr '-' expr
+  84       | expr '*' expr
+  85       | expr '/' expr
+  86       | expr '%' expr
+  87       | expr '<' expr
+  88       | expr '>' expr
+  89       | expr NLT expr
+  90       | expr NMT expr
+  91       | expr EQ expr
+  92       | expr NEQ expr
+  93       | expr AND expr
+  94       | expr OR expr
+  95       | expr '^' expr
+  96       | expr '&' expr
+  97       | expr '|' expr
+  98       | expr LS expr
+  99       | expr RS expr
+ 100       | ID '=' expr
+ 101       | '*' factor '=' expr
+ 102       | ID '[' expr ']' '=' expr
+
+ 103  _expr : factor
+ 104        | INC _expr
+ 105        | DEC _expr
+ 106        | '+' _expr
+ 107        | '-' _expr
+ 108        | '!' _expr
+ 109        | '~' _expr
+ 110        | '*' _expr
+ 111        | '&' _expr
+ 112        | '(' type ')' _expr
+
+ 113  factor : ID
+ 114         | ID INC
+ 115         | ID DEC
+ 116         | '(' expr ')'
+ 117         | array_subsc
+ 118         | INT
+ 119         | FLOAT
+ 120         | CHAR
+ 121         | STRING
+ 122         | ID '(' ')'
+ 123         | ID '(' call_params ')'
+ 124         | NUL
+ 125         | DIGITAL_WRITE '(' expr ',' HIGH_LOW ')'
+ 126         | DELAY '(' expr ')'
+
+ 127  call_params : expr
+ 128              | call_params ',' expr
+
+ 129  array_subsc : ID '[' expr ']'
+
+state 0
+	$accept : . end $end  (0)
+
+	CONST  shift 1
+	SIGNED_OR_NOT  shift 2
+	LONG_OR_SHORT  shift 3
+	KEY_INT  shift 4
+	KEY_CHAR  shift 5
+	KEY_OTHER_TYPE  shift 6
+	.  error
+
+	end  goto 7
+	_end  goto 8
+	func_def  goto 9
+	func_decl  goto 10
+	scalar_decl  goto 11
+	array_decl  goto 12
+	type  goto 13
+	type1  goto 14
+	type0  goto 15
+
+
+state 1
+	type : CONST . type1  (71)
+	type : CONST .  (72)
+
+	SIGNED_OR_NOT  shift 2
+	LONG_OR_SHORT  shift 3
+	KEY_INT  shift 4
+	KEY_CHAR  shift 5
+	KEY_OTHER_TYPE  shift 6
+	ID  reduce 72
+	')'  reduce 72
+	'*'  reduce 72
+
+	type1  goto 16
+	type0  goto 15
+
+
+state 2
+	type1 : SIGNED_OR_NOT . type0  (74)
+	type1 : SIGNED_OR_NOT .  (75)
+
+	LONG_OR_SHORT  shift 3
+	KEY_INT  shift 4
+	KEY_CHAR  shift 5
+	ID  reduce 75
+	')'  reduce 75
+	'*'  reduce 75
+
+	type0  goto 17
+
+
+state 3
+	type0 : LONG_OR_SHORT . KEY_INT  (78)
+	type0 : LONG_OR_SHORT .  (79)
+
+	KEY_INT  shift 18
+	ID  reduce 79
+	')'  reduce 79
+	'*'  reduce 79
+
+
+state 4
+	type0 : KEY_INT .  (77)
+
+	.  reduce 77
+
+
+state 5
+	type0 : KEY_CHAR .  (80)
+
+	.  reduce 80
+
+
+state 6
+	type1 : KEY_OTHER_TYPE .  (76)
+
+	.  reduce 76
+
+
+state 7
+	$accept : end . $end  (0)
+	end : end . _end  (2)
+
+	$end  accept
+	CONST  shift 1
+	SIGNED_OR_NOT  shift 2
+	LONG_OR_SHORT  shift 3
+	KEY_INT  shift 4
+	KEY_CHAR  shift 5
+	KEY_OTHER_TYPE  shift 6
+	.  error
+
+	_end  goto 19
+	func_def  goto 9
+	func_decl  goto 10
+	scalar_decl  goto 11
+	array_decl  goto 12
+	type  goto 13
+	type1  goto 14
+	type0  goto 15
+
+
+state 8
+	end : _end .  (1)
+
+	.  reduce 1
+
+
+state 9
+	_end : func_def .  (6)
+
+	.  reduce 6
+
+
+state 10
+	_end : func_decl .  (5)
+
+	.  reduce 5
+
+
+state 11
+	_end : scalar_decl .  (3)
+
+	.  reduce 3
+
+
+state 12
+	_end : array_decl .  (4)
+
+	.  reduce 4
+
+
+state 13
+	func_def : type . ident '(' params ')' $$11 compound_stmt_func  (53)
+	func_decl : type . ident '(' params ')' ';'  (54)
+	scalar_decl : type . idents ';'  (55)
+	array_decl : type . array ';'  (56)
+
+	ID  shift 20
+	'*'  shift 21
+	.  error
+
+	idents  goto 22
+	_ident  goto 23
+	array  goto 24
+	ident  goto 25
+
+
+state 14
+	type : type1 .  (70)
+
+	.  reduce 70
+
+
+state 15
+	type1 : type0 .  (73)
+
+	.  reduce 73
+
+
+state 16
+	type : CONST type1 .  (71)
+
+	.  reduce 71
+
+
+state 17
+	type1 : SIGNED_OR_NOT type0 .  (74)
+
+	.  reduce 74
+
+
+state 18
+	type0 : LONG_OR_SHORT KEY_INT .  (78)
+
+	.  reduce 78
+
+
+state 19
+	end : end _end .  (2)
+
+	.  reduce 2
+
+
+state 20
+	ident : ID .  (68)
+
+	.  reduce 68
+
+
+state 21
+	ident : '*' . ID  (69)
+
+	ID  shift 26
+	.  error
+
+
+state 22
+	scalar_decl : type idents . ';'  (55)
+	idents : idents . ',' _ident  (57)
+
+	','  shift 27
+	';'  shift 28
+	.  error
+
+
+state 23
+	idents : _ident .  (58)
+
+	.  reduce 58
+
+
+state 24
+	array_decl : type array . ';'  (56)
+
+	';'  shift 29
+	.  error
+
+
+state 25
+	func_def : type ident . '(' params ')' $$11 compound_stmt_func  (53)
+	func_decl : type ident . '(' params ')' ';'  (54)
+	_ident : ident .  (59)
+	_ident : ident . '=' expr  (60)
+	array : ident . '[' INT ']'  (61)
+
+	'('  shift 30
+	'['  shift 31
+	'='  shift 32
+	','  reduce 59
+	';'  reduce 59
+
+
+state 26
+	ident : '*' ID .  (69)
+
+	.  reduce 69
+
+
+state 27
+	idents : idents ',' . _ident  (57)
+
+	ID  shift 20
+	'*'  shift 21
+	.  error
+
+	_ident  goto 33
+	ident  goto 34
+
+
+state 28
+	scalar_decl : type idents ';' .  (55)
+
+	.  reduce 55
+
+
+state 29
+	array_decl : type array ';' .  (56)
+
+	.  reduce 56
+
+
+state 30
+	func_def : type ident '(' . params ')' $$11 compound_stmt_func  (53)
+	func_decl : type ident '(' . params ')' ';'  (54)
+	params : .  (62)
+
+	CONST  shift 1
+	SIGNED_OR_NOT  shift 2
+	LONG_OR_SHORT  shift 3
+	KEY_INT  shift 4
+	KEY_CHAR  shift 5
+	KEY_OTHER_TYPE  shift 6
+	')'  reduce 62
+
+	param  goto 35
+	_params  goto 36
+	params  goto 37
+	type  goto 38
+	type1  goto 14
+	type0  goto 15
+
+
+state 31
+	array : ident '[' . INT ']'  (61)
+
+	INT  shift 39
+	.  error
+
+
+state 32
+	_ident : ident '=' . expr  (60)
+
+	NUL  shift 40
+	ID  shift 41
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	FLOAT  shift 47
+	'('  shift 48
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 52
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	.  error
+
+	expr  goto 57
+	factor  goto 58
+	_expr  goto 59
+	array_subsc  goto 60
+
+
+state 33
+	idents : idents ',' _ident .  (57)
+
+	.  reduce 57
+
+
+state 34
+	_ident : ident .  (59)
+	_ident : ident . '=' expr  (60)
+
+	'='  shift 32
+	','  reduce 59
+	';'  reduce 59
+
+
+state 35
+	_params : param .  (64)
+
+	.  reduce 64
+
+
+state 36
+	params : _params .  (63)
+	_params : _params . ',' param  (65)
+
+	','  shift 61
+	')'  reduce 63
+
+
+state 37
+	func_def : type ident '(' params . ')' $$11 compound_stmt_func  (53)
+	func_decl : type ident '(' params . ')' ';'  (54)
+
+	')'  shift 62
+	.  error
+
+
+state 38
+	param : type . ID  (66)
+	param : type . '*' ID  (67)
+
+	ID  shift 63
+	'*'  shift 64
+	.  error
+
+
+state 39
+	array : ident '[' INT . ']'  (61)
+
+	']'  shift 65
+	.  error
+
+
+state 40
+	factor : NUL .  (124)
+
+	.  reduce 124
+
+
+state 41
+	expr : ID . '=' expr  (100)
+	expr : ID . '[' expr ']' '=' expr  (102)
+	factor : ID .  (113)
+	factor : ID . INC  (114)
+	factor : ID . DEC  (115)
+	factor : ID . '(' ')'  (122)
+	factor : ID . '(' call_params ')'  (123)
+	array_subsc : ID . '[' expr ']'  (129)
+
+	'('  shift 66
+	'['  shift 67
+	'='  shift 68
+	INC  shift 69
+	DEC  shift 70
+	','  reduce 113
+	')'  reduce 113
+	':'  reduce 113
+	';'  reduce 113
+	']'  reduce 113
+	OR  reduce 113
+	AND  reduce 113
+	'|'  reduce 113
+	'^'  reduce 113
+	'&'  reduce 113
+	EQ  reduce 113
+	NEQ  reduce 113
+	NLT  reduce 113
+	NMT  reduce 113
+	'<'  reduce 113
+	'>'  reduce 113
+	LS  reduce 113
+	RS  reduce 113
+	'+'  reduce 113
+	'-'  reduce 113
+	'*'  reduce 113
+	'/'  reduce 113
+	'%'  reduce 113
+
+
+state 42
+	factor : STRING .  (121)
+
+	.  reduce 121
+
+
+state 43
+	factor : CHAR .  (120)
+
+	.  reduce 120
+
+
+state 44
+	factor : DIGITAL_WRITE . '(' expr ',' HIGH_LOW ')'  (125)
+
+	'('  shift 71
+	.  error
+
+
+state 45
+	factor : DELAY . '(' expr ')'  (126)
+
+	'('  shift 72
+	.  error
+
+
+state 46
+	factor : INT .  (118)
+
+	.  reduce 118
+
+
+state 47
+	factor : FLOAT .  (119)
+
+	.  reduce 119
+
+
+state 48
+	_expr : '(' . type ')' _expr  (112)
+	factor : '(' . expr ')'  (116)
+
+	NUL  shift 40
+	CONST  shift 1
+	SIGNED_OR_NOT  shift 2
+	LONG_OR_SHORT  shift 3
+	KEY_INT  shift 4
+	KEY_CHAR  shift 5
+	KEY_OTHER_TYPE  shift 6
+	ID  shift 41
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	FLOAT  shift 47
+	'('  shift 48
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 52
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	.  error
+
+	type  goto 73
+	type1  goto 14
+	type0  goto 15
+	expr  goto 74
+	factor  goto 58
+	_expr  goto 59
+	array_subsc  goto 60
+
+
+state 49
+	_expr : '&' . _expr  (111)
+
+	NUL  shift 40
+	ID  shift 75
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	FLOAT  shift 47
+	'('  shift 48
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 76
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	.  error
+
+	factor  goto 58
+	_expr  goto 77
+	array_subsc  goto 60
+
+
+state 50
+	_expr : '+' . _expr  (106)
+
+	NUL  shift 40
+	ID  shift 75
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	FLOAT  shift 47
+	'('  shift 48
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 76
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	.  error
+
+	factor  goto 58
+	_expr  goto 78
+	array_subsc  goto 60
+
+
+state 51
+	_expr : '-' . _expr  (107)
+
+	NUL  shift 40
+	ID  shift 75
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	FLOAT  shift 47
+	'('  shift 48
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 76
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	.  error
+
+	factor  goto 58
+	_expr  goto 79
+	array_subsc  goto 60
+
+
+state 52
+	expr : '*' . factor '=' expr  (101)
+	_expr : '*' . _expr  (110)
+
+	NUL  shift 40
+	ID  shift 75
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	FLOAT  shift 47
+	'('  shift 48
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 76
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	.  error
+
+	factor  goto 80
+	_expr  goto 81
+	array_subsc  goto 60
+
+
+state 53
+	_expr : INC . _expr  (104)
+
+	NUL  shift 40
+	ID  shift 75
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	FLOAT  shift 47
+	'('  shift 48
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 76
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	.  error
+
+	factor  goto 58
+	_expr  goto 82
+	array_subsc  goto 60
+
+
+state 54
+	_expr : DEC . _expr  (105)
+
+	NUL  shift 40
+	ID  shift 75
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	FLOAT  shift 47
+	'('  shift 48
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 76
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	.  error
+
+	factor  goto 58
+	_expr  goto 83
+	array_subsc  goto 60
+
+
+state 55
+	_expr : '!' . _expr  (108)
+
+	NUL  shift 40
+	ID  shift 75
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	FLOAT  shift 47
+	'('  shift 48
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 76
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	.  error
+
+	factor  goto 58
+	_expr  goto 84
+	array_subsc  goto 60
+
+
+state 56
+	_expr : '~' . _expr  (109)
+
+	NUL  shift 40
+	ID  shift 75
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	FLOAT  shift 47
+	'('  shift 48
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 76
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	.  error
+
+	factor  goto 58
+	_expr  goto 85
+	array_subsc  goto 60
+
+
+state 57
+	_ident : ident '=' expr .  (60)
+	expr : expr . '+' expr  (82)
+	expr : expr . '-' expr  (83)
+	expr : expr . '*' expr  (84)
+	expr : expr . '/' expr  (85)
+	expr : expr . '%' expr  (86)
+	expr : expr . '<' expr  (87)
+	expr : expr . '>' expr  (88)
+	expr : expr . NLT expr  (89)
+	expr : expr . NMT expr  (90)
+	expr : expr . EQ expr  (91)
+	expr : expr . NEQ expr  (92)
+	expr : expr . AND expr  (93)
+	expr : expr . OR expr  (94)
+	expr : expr . '^' expr  (95)
+	expr : expr . '&' expr  (96)
+	expr : expr . '|' expr  (97)
+	expr : expr . LS expr  (98)
+	expr : expr . RS expr  (99)
+
+	OR  shift 86
+	AND  shift 87
+	'|'  shift 88
+	'^'  shift 89
+	'&'  shift 90
+	EQ  shift 91
+	NEQ  shift 92
+	NLT  shift 93
+	NMT  shift 94
+	'<'  shift 95
+	'>'  shift 96
+	LS  shift 97
+	RS  shift 98
+	'+'  shift 99
+	'-'  shift 100
+	'*'  shift 101
+	'/'  shift 102
+	'%'  shift 103
+	','  reduce 60
+	';'  reduce 60
+
+
+state 58
+	_expr : factor .  (103)
+
+	.  reduce 103
+
+
+state 59
+	expr : _expr .  (81)
+
+	.  reduce 81
+
+
+state 60
+	factor : array_subsc .  (117)
+
+	.  reduce 117
+
+
+state 61
+	_params : _params ',' . param  (65)
+
+	CONST  shift 1
+	SIGNED_OR_NOT  shift 2
+	LONG_OR_SHORT  shift 3
+	KEY_INT  shift 4
+	KEY_CHAR  shift 5
+	KEY_OTHER_TYPE  shift 6
+	.  error
+
+	param  goto 104
+	type  goto 38
+	type1  goto 14
+	type0  goto 15
+
+
+state 62
+	func_def : type ident '(' params ')' . $$11 compound_stmt_func  (53)
+	func_decl : type ident '(' params ')' . ';'  (54)
+	$$11 : .  (52)
+
+	';'  shift 105
+	'{'  reduce 52
+
+	$$11  goto 106
+
+
+state 63
+	param : type ID .  (66)
+
+	.  reduce 66
+
+
+state 64
+	param : type '*' . ID  (67)
+
+	ID  shift 107
+	.  error
+
+
+state 65
+	array : ident '[' INT ']' .  (61)
+
+	.  reduce 61
+
+
+state 66
+	factor : ID '(' . ')'  (122)
+	factor : ID '(' . call_params ')'  (123)
+
+	NUL  shift 40
+	ID  shift 41
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	FLOAT  shift 47
+	'('  shift 48
+	')'  shift 108
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 52
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	.  error
+
+	call_params  goto 109
+	expr  goto 110
+	factor  goto 58
+	_expr  goto 59
+	array_subsc  goto 60
+
+
+state 67
+	expr : ID '[' . expr ']' '=' expr  (102)
+	array_subsc : ID '[' . expr ']'  (129)
+
+	NUL  shift 40
+	ID  shift 41
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	FLOAT  shift 47
+	'('  shift 48
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 52
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	.  error
+
+	expr  goto 111
+	factor  goto 58
+	_expr  goto 59
+	array_subsc  goto 60
+
+
+state 68
+	expr : ID '=' . expr  (100)
+
+	NUL  shift 40
+	ID  shift 41
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	FLOAT  shift 47
+	'('  shift 48
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 52
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	.  error
+
+	expr  goto 112
+	factor  goto 58
+	_expr  goto 59
+	array_subsc  goto 60
+
+
+state 69
+	factor : ID INC .  (114)
+
+	.  reduce 114
+
+
+state 70
+	factor : ID DEC .  (115)
+
+	.  reduce 115
+
+
+state 71
+	factor : DIGITAL_WRITE '(' . expr ',' HIGH_LOW ')'  (125)
+
+	NUL  shift 40
+	ID  shift 41
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	FLOAT  shift 47
+	'('  shift 48
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 52
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	.  error
+
+	expr  goto 113
+	factor  goto 58
+	_expr  goto 59
+	array_subsc  goto 60
+
+
+state 72
+	factor : DELAY '(' . expr ')'  (126)
+
+	NUL  shift 40
+	ID  shift 41
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	FLOAT  shift 47
+	'('  shift 48
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 52
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	.  error
+
+	expr  goto 114
+	factor  goto 58
+	_expr  goto 59
+	array_subsc  goto 60
+
+
+state 73
+	_expr : '(' type . ')' _expr  (112)
+
+	')'  shift 115
+	.  error
+
+
+state 74
+	expr : expr . '+' expr  (82)
+	expr : expr . '-' expr  (83)
+	expr : expr . '*' expr  (84)
+	expr : expr . '/' expr  (85)
+	expr : expr . '%' expr  (86)
+	expr : expr . '<' expr  (87)
+	expr : expr . '>' expr  (88)
+	expr : expr . NLT expr  (89)
+	expr : expr . NMT expr  (90)
+	expr : expr . EQ expr  (91)
+	expr : expr . NEQ expr  (92)
+	expr : expr . AND expr  (93)
+	expr : expr . OR expr  (94)
+	expr : expr . '^' expr  (95)
+	expr : expr . '&' expr  (96)
+	expr : expr . '|' expr  (97)
+	expr : expr . LS expr  (98)
+	expr : expr . RS expr  (99)
+	factor : '(' expr . ')'  (116)
+
+	')'  shift 116
+	OR  shift 86
+	AND  shift 87
+	'|'  shift 88
+	'^'  shift 89
+	'&'  shift 90
+	EQ  shift 91
+	NEQ  shift 92
+	NLT  shift 93
+	NMT  shift 94
+	'<'  shift 95
+	'>'  shift 96
+	LS  shift 97
+	RS  shift 98
+	'+'  shift 99
+	'-'  shift 100
+	'*'  shift 101
+	'/'  shift 102
+	'%'  shift 103
+	.  error
+
+
+state 75
+	factor : ID .  (113)
+	factor : ID . INC  (114)
+	factor : ID . DEC  (115)
+	factor : ID . '(' ')'  (122)
+	factor : ID . '(' call_params ')'  (123)
+	array_subsc : ID . '[' expr ']'  (129)
+
+	'('  shift 66
+	'['  shift 117
+	INC  shift 69
+	DEC  shift 70
+	','  reduce 113
+	')'  reduce 113
+	':'  reduce 113
+	';'  reduce 113
+	']'  reduce 113
+	'='  reduce 113
+	OR  reduce 113
+	AND  reduce 113
+	'|'  reduce 113
+	'^'  reduce 113
+	'&'  reduce 113
+	EQ  reduce 113
+	NEQ  reduce 113
+	NLT  reduce 113
+	NMT  reduce 113
+	'<'  reduce 113
+	'>'  reduce 113
+	LS  reduce 113
+	RS  reduce 113
+	'+'  reduce 113
+	'-'  reduce 113
+	'*'  reduce 113
+	'/'  reduce 113
+	'%'  reduce 113
+
+
+state 76
+	_expr : '*' . _expr  (110)
+
+	NUL  shift 40
+	ID  shift 75
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	FLOAT  shift 47
+	'('  shift 48
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 76
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	.  error
+
+	factor  goto 58
+	_expr  goto 81
+	array_subsc  goto 60
+
+
+state 77
+	_expr : '&' _expr .  (111)
+
+	.  reduce 111
+
+
+state 78
+	_expr : '+' _expr .  (106)
+
+	.  reduce 106
+
+
+state 79
+	_expr : '-' _expr .  (107)
+
+	.  reduce 107
+
+
+state 80
+	expr : '*' factor . '=' expr  (101)
+	_expr : factor .  (103)
+
+	'='  shift 118
+	','  reduce 103
+	')'  reduce 103
+	':'  reduce 103
+	';'  reduce 103
+	']'  reduce 103
+	OR  reduce 103
+	AND  reduce 103
+	'|'  reduce 103
+	'^'  reduce 103
+	'&'  reduce 103
+	EQ  reduce 103
+	NEQ  reduce 103
+	NLT  reduce 103
+	NMT  reduce 103
+	'<'  reduce 103
+	'>'  reduce 103
+	LS  reduce 103
+	RS  reduce 103
+	'+'  reduce 103
+	'-'  reduce 103
+	'*'  reduce 103
+	'/'  reduce 103
+	'%'  reduce 103
+
+
+state 81
+	_expr : '*' _expr .  (110)
+
+	.  reduce 110
+
+
+state 82
+	_expr : INC _expr .  (104)
+
+	.  reduce 104
+
+
+state 83
+	_expr : DEC _expr .  (105)
+
+	.  reduce 105
+
+
+state 84
+	_expr : '!' _expr .  (108)
+
+	.  reduce 108
+
+
+state 85
+	_expr : '~' _expr .  (109)
+
+	.  reduce 109
+
+
+state 86
+	expr : expr OR . expr  (94)
+
+	NUL  shift 40
+	ID  shift 41
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	FLOAT  shift 47
+	'('  shift 48
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 52
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	.  error
+
+	expr  goto 119
+	factor  goto 58
+	_expr  goto 59
+	array_subsc  goto 60
+
+
+state 87
+	expr : expr AND . expr  (93)
+
+	NUL  shift 40
+	ID  shift 41
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	FLOAT  shift 47
+	'('  shift 48
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 52
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	.  error
+
+	expr  goto 120
+	factor  goto 58
+	_expr  goto 59
+	array_subsc  goto 60
+
+
+state 88
+	expr : expr '|' . expr  (97)
+
+	NUL  shift 40
+	ID  shift 41
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	FLOAT  shift 47
+	'('  shift 48
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 52
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	.  error
+
+	expr  goto 121
+	factor  goto 58
+	_expr  goto 59
+	array_subsc  goto 60
+
+
+state 89
+	expr : expr '^' . expr  (95)
+
+	NUL  shift 40
+	ID  shift 41
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	FLOAT  shift 47
+	'('  shift 48
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 52
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	.  error
+
+	expr  goto 122
+	factor  goto 58
+	_expr  goto 59
+	array_subsc  goto 60
+
+
+state 90
+	expr : expr '&' . expr  (96)
+
+	NUL  shift 40
+	ID  shift 41
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	FLOAT  shift 47
+	'('  shift 48
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 52
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	.  error
+
+	expr  goto 123
+	factor  goto 58
+	_expr  goto 59
+	array_subsc  goto 60
+
+
+state 91
+	expr : expr EQ . expr  (91)
+
+	NUL  shift 40
+	ID  shift 41
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	FLOAT  shift 47
+	'('  shift 48
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 52
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	.  error
+
+	expr  goto 124
+	factor  goto 58
+	_expr  goto 59
+	array_subsc  goto 60
+
+
+state 92
+	expr : expr NEQ . expr  (92)
+
+	NUL  shift 40
+	ID  shift 41
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	FLOAT  shift 47
+	'('  shift 48
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 52
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	.  error
+
+	expr  goto 125
+	factor  goto 58
+	_expr  goto 59
+	array_subsc  goto 60
+
+
+state 93
+	expr : expr NLT . expr  (89)
+
+	NUL  shift 40
+	ID  shift 41
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	FLOAT  shift 47
+	'('  shift 48
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 52
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	.  error
+
+	expr  goto 126
+	factor  goto 58
+	_expr  goto 59
+	array_subsc  goto 60
+
+
+state 94
+	expr : expr NMT . expr  (90)
+
+	NUL  shift 40
+	ID  shift 41
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	FLOAT  shift 47
+	'('  shift 48
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 52
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	.  error
+
+	expr  goto 127
+	factor  goto 58
+	_expr  goto 59
+	array_subsc  goto 60
+
+
+state 95
+	expr : expr '<' . expr  (87)
+
+	NUL  shift 40
+	ID  shift 41
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	FLOAT  shift 47
+	'('  shift 48
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 52
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	.  error
+
+	expr  goto 128
+	factor  goto 58
+	_expr  goto 59
+	array_subsc  goto 60
+
+
+state 96
+	expr : expr '>' . expr  (88)
+
+	NUL  shift 40
+	ID  shift 41
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	FLOAT  shift 47
+	'('  shift 48
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 52
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	.  error
+
+	expr  goto 129
+	factor  goto 58
+	_expr  goto 59
+	array_subsc  goto 60
+
+
+state 97
+	expr : expr LS . expr  (98)
+
+	NUL  shift 40
+	ID  shift 41
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	FLOAT  shift 47
+	'('  shift 48
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 52
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	.  error
+
+	expr  goto 130
+	factor  goto 58
+	_expr  goto 59
+	array_subsc  goto 60
+
+
+state 98
+	expr : expr RS . expr  (99)
+
+	NUL  shift 40
+	ID  shift 41
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	FLOAT  shift 47
+	'('  shift 48
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 52
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	.  error
+
+	expr  goto 131
+	factor  goto 58
+	_expr  goto 59
+	array_subsc  goto 60
+
+
+state 99
+	expr : expr '+' . expr  (82)
+
+	NUL  shift 40
+	ID  shift 41
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	FLOAT  shift 47
+	'('  shift 48
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 52
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	.  error
+
+	expr  goto 132
+	factor  goto 58
+	_expr  goto 59
+	array_subsc  goto 60
+
+
+state 100
+	expr : expr '-' . expr  (83)
+
+	NUL  shift 40
+	ID  shift 41
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	FLOAT  shift 47
+	'('  shift 48
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 52
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	.  error
+
+	expr  goto 133
+	factor  goto 58
+	_expr  goto 59
+	array_subsc  goto 60
+
+
+state 101
+	expr : expr '*' . expr  (84)
+
+	NUL  shift 40
+	ID  shift 41
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	FLOAT  shift 47
+	'('  shift 48
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 52
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	.  error
+
+	expr  goto 134
+	factor  goto 58
+	_expr  goto 59
+	array_subsc  goto 60
+
+
+state 102
+	expr : expr '/' . expr  (85)
+
+	NUL  shift 40
+	ID  shift 41
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	FLOAT  shift 47
+	'('  shift 48
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 52
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	.  error
+
+	expr  goto 135
+	factor  goto 58
+	_expr  goto 59
+	array_subsc  goto 60
+
+
+state 103
+	expr : expr '%' . expr  (86)
+
+	NUL  shift 40
+	ID  shift 41
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	FLOAT  shift 47
+	'('  shift 48
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 52
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	.  error
+
+	expr  goto 136
+	factor  goto 58
+	_expr  goto 59
+	array_subsc  goto 60
+
+
+state 104
+	_params : _params ',' param .  (65)
+
+	.  reduce 65
+
+
+state 105
+	func_decl : type ident '(' params ')' ';' .  (54)
+
+	.  reduce 54
+
+
+state 106
+	func_def : type ident '(' params ')' $$11 . compound_stmt_func  (53)
+
+	'{'  shift 137
+	.  error
+
+	compound_stmt_func  goto 138
+
+
+state 107
+	param : type '*' ID .  (67)
+
+	.  reduce 67
+
+
+state 108
+	factor : ID '(' ')' .  (122)
+
+	.  reduce 122
+
+
+state 109
+	factor : ID '(' call_params . ')'  (123)
+	call_params : call_params . ',' expr  (128)
+
+	','  shift 139
+	')'  shift 140
+	.  error
+
+
+state 110
+	expr : expr . '+' expr  (82)
+	expr : expr . '-' expr  (83)
+	expr : expr . '*' expr  (84)
+	expr : expr . '/' expr  (85)
+	expr : expr . '%' expr  (86)
+	expr : expr . '<' expr  (87)
+	expr : expr . '>' expr  (88)
+	expr : expr . NLT expr  (89)
+	expr : expr . NMT expr  (90)
+	expr : expr . EQ expr  (91)
+	expr : expr . NEQ expr  (92)
+	expr : expr . AND expr  (93)
+	expr : expr . OR expr  (94)
+	expr : expr . '^' expr  (95)
+	expr : expr . '&' expr  (96)
+	expr : expr . '|' expr  (97)
+	expr : expr . LS expr  (98)
+	expr : expr . RS expr  (99)
+	call_params : expr .  (127)
+
+	OR  shift 86
+	AND  shift 87
+	'|'  shift 88
+	'^'  shift 89
+	'&'  shift 90
+	EQ  shift 91
+	NEQ  shift 92
+	NLT  shift 93
+	NMT  shift 94
+	'<'  shift 95
+	'>'  shift 96
+	LS  shift 97
+	RS  shift 98
+	'+'  shift 99
+	'-'  shift 100
+	'*'  shift 101
+	'/'  shift 102
+	'%'  shift 103
+	','  reduce 127
+	')'  reduce 127
+
+
+state 111
+	expr : expr . '+' expr  (82)
+	expr : expr . '-' expr  (83)
+	expr : expr . '*' expr  (84)
+	expr : expr . '/' expr  (85)
+	expr : expr . '%' expr  (86)
+	expr : expr . '<' expr  (87)
+	expr : expr . '>' expr  (88)
+	expr : expr . NLT expr  (89)
+	expr : expr . NMT expr  (90)
+	expr : expr . EQ expr  (91)
+	expr : expr . NEQ expr  (92)
+	expr : expr . AND expr  (93)
+	expr : expr . OR expr  (94)
+	expr : expr . '^' expr  (95)
+	expr : expr . '&' expr  (96)
+	expr : expr . '|' expr  (97)
+	expr : expr . LS expr  (98)
+	expr : expr . RS expr  (99)
+	expr : ID '[' expr . ']' '=' expr  (102)
+	array_subsc : ID '[' expr . ']'  (129)
+
+	']'  shift 141
+	OR  shift 86
+	AND  shift 87
+	'|'  shift 88
+	'^'  shift 89
+	'&'  shift 90
+	EQ  shift 91
+	NEQ  shift 92
+	NLT  shift 93
+	NMT  shift 94
+	'<'  shift 95
+	'>'  shift 96
+	LS  shift 97
+	RS  shift 98
+	'+'  shift 99
+	'-'  shift 100
+	'*'  shift 101
+	'/'  shift 102
+	'%'  shift 103
+	.  error
+
+
+state 112
+	expr : expr . '+' expr  (82)
+	expr : expr . '-' expr  (83)
+	expr : expr . '*' expr  (84)
+	expr : expr . '/' expr  (85)
+	expr : expr . '%' expr  (86)
+	expr : expr . '<' expr  (87)
+	expr : expr . '>' expr  (88)
+	expr : expr . NLT expr  (89)
+	expr : expr . NMT expr  (90)
+	expr : expr . EQ expr  (91)
+	expr : expr . NEQ expr  (92)
+	expr : expr . AND expr  (93)
+	expr : expr . OR expr  (94)
+	expr : expr . '^' expr  (95)
+	expr : expr . '&' expr  (96)
+	expr : expr . '|' expr  (97)
+	expr : expr . LS expr  (98)
+	expr : expr . RS expr  (99)
+	expr : ID '=' expr .  (100)
+
+	OR  shift 86
+	AND  shift 87
+	'|'  shift 88
+	'^'  shift 89
+	'&'  shift 90
+	EQ  shift 91
+	NEQ  shift 92
+	NLT  shift 93
+	NMT  shift 94
+	'<'  shift 95
+	'>'  shift 96
+	LS  shift 97
+	RS  shift 98
+	'+'  shift 99
+	'-'  shift 100
+	'*'  shift 101
+	'/'  shift 102
+	'%'  shift 103
+	','  reduce 100
+	')'  reduce 100
+	':'  reduce 100
+	';'  reduce 100
+	']'  reduce 100
+
+
+state 113
+	expr : expr . '+' expr  (82)
+	expr : expr . '-' expr  (83)
+	expr : expr . '*' expr  (84)
+	expr : expr . '/' expr  (85)
+	expr : expr . '%' expr  (86)
+	expr : expr . '<' expr  (87)
+	expr : expr . '>' expr  (88)
+	expr : expr . NLT expr  (89)
+	expr : expr . NMT expr  (90)
+	expr : expr . EQ expr  (91)
+	expr : expr . NEQ expr  (92)
+	expr : expr . AND expr  (93)
+	expr : expr . OR expr  (94)
+	expr : expr . '^' expr  (95)
+	expr : expr . '&' expr  (96)
+	expr : expr . '|' expr  (97)
+	expr : expr . LS expr  (98)
+	expr : expr . RS expr  (99)
+	factor : DIGITAL_WRITE '(' expr . ',' HIGH_LOW ')'  (125)
+
+	','  shift 142
+	OR  shift 86
+	AND  shift 87
+	'|'  shift 88
+	'^'  shift 89
+	'&'  shift 90
+	EQ  shift 91
+	NEQ  shift 92
+	NLT  shift 93
+	NMT  shift 94
+	'<'  shift 95
+	'>'  shift 96
+	LS  shift 97
+	RS  shift 98
+	'+'  shift 99
+	'-'  shift 100
+	'*'  shift 101
+	'/'  shift 102
+	'%'  shift 103
+	.  error
+
+
+state 114
+	expr : expr . '+' expr  (82)
+	expr : expr . '-' expr  (83)
+	expr : expr . '*' expr  (84)
+	expr : expr . '/' expr  (85)
+	expr : expr . '%' expr  (86)
+	expr : expr . '<' expr  (87)
+	expr : expr . '>' expr  (88)
+	expr : expr . NLT expr  (89)
+	expr : expr . NMT expr  (90)
+	expr : expr . EQ expr  (91)
+	expr : expr . NEQ expr  (92)
+	expr : expr . AND expr  (93)
+	expr : expr . OR expr  (94)
+	expr : expr . '^' expr  (95)
+	expr : expr . '&' expr  (96)
+	expr : expr . '|' expr  (97)
+	expr : expr . LS expr  (98)
+	expr : expr . RS expr  (99)
+	factor : DELAY '(' expr . ')'  (126)
+
+	')'  shift 143
+	OR  shift 86
+	AND  shift 87
+	'|'  shift 88
+	'^'  shift 89
+	'&'  shift 90
+	EQ  shift 91
+	NEQ  shift 92
+	NLT  shift 93
+	NMT  shift 94
+	'<'  shift 95
+	'>'  shift 96
+	LS  shift 97
+	RS  shift 98
+	'+'  shift 99
+	'-'  shift 100
+	'*'  shift 101
+	'/'  shift 102
+	'%'  shift 103
+	.  error
+
+
+state 115
+	_expr : '(' type ')' . _expr  (112)
+
+	NUL  shift 40
+	ID  shift 75
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	FLOAT  shift 47
+	'('  shift 48
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 76
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	.  error
+
+	factor  goto 58
+	_expr  goto 144
+	array_subsc  goto 60
+
+
+state 116
+	factor : '(' expr ')' .  (116)
+
+	.  reduce 116
+
+
+state 117
+	array_subsc : ID '[' . expr ']'  (129)
+
+	NUL  shift 40
+	ID  shift 41
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	FLOAT  shift 47
+	'('  shift 48
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 52
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	.  error
+
+	expr  goto 145
+	factor  goto 58
+	_expr  goto 59
+	array_subsc  goto 60
+
+
+state 118
+	expr : '*' factor '=' . expr  (101)
+
+	NUL  shift 40
+	ID  shift 41
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	FLOAT  shift 47
+	'('  shift 48
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 52
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	.  error
+
+	expr  goto 146
+	factor  goto 58
+	_expr  goto 59
+	array_subsc  goto 60
+
+
+state 119
+	expr : expr . '+' expr  (82)
+	expr : expr . '-' expr  (83)
+	expr : expr . '*' expr  (84)
+	expr : expr . '/' expr  (85)
+	expr : expr . '%' expr  (86)
+	expr : expr . '<' expr  (87)
+	expr : expr . '>' expr  (88)
+	expr : expr . NLT expr  (89)
+	expr : expr . NMT expr  (90)
+	expr : expr . EQ expr  (91)
+	expr : expr . NEQ expr  (92)
+	expr : expr . AND expr  (93)
+	expr : expr . OR expr  (94)
+	expr : expr OR expr .  (94)
+	expr : expr . '^' expr  (95)
+	expr : expr . '&' expr  (96)
+	expr : expr . '|' expr  (97)
+	expr : expr . LS expr  (98)
+	expr : expr . RS expr  (99)
+
+	AND  shift 87
+	'|'  shift 88
+	'^'  shift 89
+	'&'  shift 90
+	EQ  shift 91
+	NEQ  shift 92
+	NLT  shift 93
+	NMT  shift 94
+	'<'  shift 95
+	'>'  shift 96
+	LS  shift 97
+	RS  shift 98
+	'+'  shift 99
+	'-'  shift 100
+	'*'  shift 101
+	'/'  shift 102
+	'%'  shift 103
+	','  reduce 94
+	')'  reduce 94
+	':'  reduce 94
+	';'  reduce 94
+	']'  reduce 94
+	OR  reduce 94
+
+
+state 120
+	expr : expr . '+' expr  (82)
+	expr : expr . '-' expr  (83)
+	expr : expr . '*' expr  (84)
+	expr : expr . '/' expr  (85)
+	expr : expr . '%' expr  (86)
+	expr : expr . '<' expr  (87)
+	expr : expr . '>' expr  (88)
+	expr : expr . NLT expr  (89)
+	expr : expr . NMT expr  (90)
+	expr : expr . EQ expr  (91)
+	expr : expr . NEQ expr  (92)
+	expr : expr . AND expr  (93)
+	expr : expr AND expr .  (93)
+	expr : expr . OR expr  (94)
+	expr : expr . '^' expr  (95)
+	expr : expr . '&' expr  (96)
+	expr : expr . '|' expr  (97)
+	expr : expr . LS expr  (98)
+	expr : expr . RS expr  (99)
+
+	'|'  shift 88
+	'^'  shift 89
+	'&'  shift 90
+	EQ  shift 91
+	NEQ  shift 92
+	NLT  shift 93
+	NMT  shift 94
+	'<'  shift 95
+	'>'  shift 96
+	LS  shift 97
+	RS  shift 98
+	'+'  shift 99
+	'-'  shift 100
+	'*'  shift 101
+	'/'  shift 102
+	'%'  shift 103
+	','  reduce 93
+	')'  reduce 93
+	':'  reduce 93
+	';'  reduce 93
+	']'  reduce 93
+	OR  reduce 93
+	AND  reduce 93
+
+
+state 121
+	expr : expr . '+' expr  (82)
+	expr : expr . '-' expr  (83)
+	expr : expr . '*' expr  (84)
+	expr : expr . '/' expr  (85)
+	expr : expr . '%' expr  (86)
+	expr : expr . '<' expr  (87)
+	expr : expr . '>' expr  (88)
+	expr : expr . NLT expr  (89)
+	expr : expr . NMT expr  (90)
+	expr : expr . EQ expr  (91)
+	expr : expr . NEQ expr  (92)
+	expr : expr . AND expr  (93)
+	expr : expr . OR expr  (94)
+	expr : expr . '^' expr  (95)
+	expr : expr . '&' expr  (96)
+	expr : expr . '|' expr  (97)
+	expr : expr '|' expr .  (97)
+	expr : expr . LS expr  (98)
+	expr : expr . RS expr  (99)
+
+	'^'  shift 89
+	'&'  shift 90
+	EQ  shift 91
+	NEQ  shift 92
+	NLT  shift 93
+	NMT  shift 94
+	'<'  shift 95
+	'>'  shift 96
+	LS  shift 97
+	RS  shift 98
+	'+'  shift 99
+	'-'  shift 100
+	'*'  shift 101
+	'/'  shift 102
+	'%'  shift 103
+	','  reduce 97
+	')'  reduce 97
+	':'  reduce 97
+	';'  reduce 97
+	']'  reduce 97
+	OR  reduce 97
+	AND  reduce 97
+	'|'  reduce 97
+
+
+state 122
+	expr : expr . '+' expr  (82)
+	expr : expr . '-' expr  (83)
+	expr : expr . '*' expr  (84)
+	expr : expr . '/' expr  (85)
+	expr : expr . '%' expr  (86)
+	expr : expr . '<' expr  (87)
+	expr : expr . '>' expr  (88)
+	expr : expr . NLT expr  (89)
+	expr : expr . NMT expr  (90)
+	expr : expr . EQ expr  (91)
+	expr : expr . NEQ expr  (92)
+	expr : expr . AND expr  (93)
+	expr : expr . OR expr  (94)
+	expr : expr . '^' expr  (95)
+	expr : expr '^' expr .  (95)
+	expr : expr . '&' expr  (96)
+	expr : expr . '|' expr  (97)
+	expr : expr . LS expr  (98)
+	expr : expr . RS expr  (99)
+
+	'&'  shift 90
+	EQ  shift 91
+	NEQ  shift 92
+	NLT  shift 93
+	NMT  shift 94
+	'<'  shift 95
+	'>'  shift 96
+	LS  shift 97
+	RS  shift 98
+	'+'  shift 99
+	'-'  shift 100
+	'*'  shift 101
+	'/'  shift 102
+	'%'  shift 103
+	','  reduce 95
+	')'  reduce 95
+	':'  reduce 95
+	';'  reduce 95
+	']'  reduce 95
+	OR  reduce 95
+	AND  reduce 95
+	'|'  reduce 95
+	'^'  reduce 95
+
+
+state 123
+	expr : expr . '+' expr  (82)
+	expr : expr . '-' expr  (83)
+	expr : expr . '*' expr  (84)
+	expr : expr . '/' expr  (85)
+	expr : expr . '%' expr  (86)
+	expr : expr . '<' expr  (87)
+	expr : expr . '>' expr  (88)
+	expr : expr . NLT expr  (89)
+	expr : expr . NMT expr  (90)
+	expr : expr . EQ expr  (91)
+	expr : expr . NEQ expr  (92)
+	expr : expr . AND expr  (93)
+	expr : expr . OR expr  (94)
+	expr : expr . '^' expr  (95)
+	expr : expr . '&' expr  (96)
+	expr : expr '&' expr .  (96)
+	expr : expr . '|' expr  (97)
+	expr : expr . LS expr  (98)
+	expr : expr . RS expr  (99)
+
+	EQ  shift 91
+	NEQ  shift 92
+	NLT  shift 93
+	NMT  shift 94
+	'<'  shift 95
+	'>'  shift 96
+	LS  shift 97
+	RS  shift 98
+	'+'  shift 99
+	'-'  shift 100
+	'*'  shift 101
+	'/'  shift 102
+	'%'  shift 103
+	','  reduce 96
+	')'  reduce 96
+	':'  reduce 96
+	';'  reduce 96
+	']'  reduce 96
+	OR  reduce 96
+	AND  reduce 96
+	'|'  reduce 96
+	'^'  reduce 96
+	'&'  reduce 96
+
+
+state 124
+	expr : expr . '+' expr  (82)
+	expr : expr . '-' expr  (83)
+	expr : expr . '*' expr  (84)
+	expr : expr . '/' expr  (85)
+	expr : expr . '%' expr  (86)
+	expr : expr . '<' expr  (87)
+	expr : expr . '>' expr  (88)
+	expr : expr . NLT expr  (89)
+	expr : expr . NMT expr  (90)
+	expr : expr . EQ expr  (91)
+	expr : expr EQ expr .  (91)
+	expr : expr . NEQ expr  (92)
+	expr : expr . AND expr  (93)
+	expr : expr . OR expr  (94)
+	expr : expr . '^' expr  (95)
+	expr : expr . '&' expr  (96)
+	expr : expr . '|' expr  (97)
+	expr : expr . LS expr  (98)
+	expr : expr . RS expr  (99)
+
+	NLT  shift 93
+	NMT  shift 94
+	'<'  shift 95
+	'>'  shift 96
+	LS  shift 97
+	RS  shift 98
+	'+'  shift 99
+	'-'  shift 100
+	'*'  shift 101
+	'/'  shift 102
+	'%'  shift 103
+	','  reduce 91
+	')'  reduce 91
+	':'  reduce 91
+	';'  reduce 91
+	']'  reduce 91
+	OR  reduce 91
+	AND  reduce 91
+	'|'  reduce 91
+	'^'  reduce 91
+	'&'  reduce 91
+	EQ  reduce 91
+	NEQ  reduce 91
+
+
+state 125
+	expr : expr . '+' expr  (82)
+	expr : expr . '-' expr  (83)
+	expr : expr . '*' expr  (84)
+	expr : expr . '/' expr  (85)
+	expr : expr . '%' expr  (86)
+	expr : expr . '<' expr  (87)
+	expr : expr . '>' expr  (88)
+	expr : expr . NLT expr  (89)
+	expr : expr . NMT expr  (90)
+	expr : expr . EQ expr  (91)
+	expr : expr . NEQ expr  (92)
+	expr : expr NEQ expr .  (92)
+	expr : expr . AND expr  (93)
+	expr : expr . OR expr  (94)
+	expr : expr . '^' expr  (95)
+	expr : expr . '&' expr  (96)
+	expr : expr . '|' expr  (97)
+	expr : expr . LS expr  (98)
+	expr : expr . RS expr  (99)
+
+	NLT  shift 93
+	NMT  shift 94
+	'<'  shift 95
+	'>'  shift 96
+	LS  shift 97
+	RS  shift 98
+	'+'  shift 99
+	'-'  shift 100
+	'*'  shift 101
+	'/'  shift 102
+	'%'  shift 103
+	','  reduce 92
+	')'  reduce 92
+	':'  reduce 92
+	';'  reduce 92
+	']'  reduce 92
+	OR  reduce 92
+	AND  reduce 92
+	'|'  reduce 92
+	'^'  reduce 92
+	'&'  reduce 92
+	EQ  reduce 92
+	NEQ  reduce 92
+
+
+state 126
+	expr : expr . '+' expr  (82)
+	expr : expr . '-' expr  (83)
+	expr : expr . '*' expr  (84)
+	expr : expr . '/' expr  (85)
+	expr : expr . '%' expr  (86)
+	expr : expr . '<' expr  (87)
+	expr : expr . '>' expr  (88)
+	expr : expr . NLT expr  (89)
+	expr : expr NLT expr .  (89)
+	expr : expr . NMT expr  (90)
+	expr : expr . EQ expr  (91)
+	expr : expr . NEQ expr  (92)
+	expr : expr . AND expr  (93)
+	expr : expr . OR expr  (94)
+	expr : expr . '^' expr  (95)
+	expr : expr . '&' expr  (96)
+	expr : expr . '|' expr  (97)
+	expr : expr . LS expr  (98)
+	expr : expr . RS expr  (99)
+
+	LS  shift 97
+	RS  shift 98
+	'+'  shift 99
+	'-'  shift 100
+	'*'  shift 101
+	'/'  shift 102
+	'%'  shift 103
+	','  reduce 89
+	')'  reduce 89
+	':'  reduce 89
+	';'  reduce 89
+	']'  reduce 89
+	OR  reduce 89
+	AND  reduce 89
+	'|'  reduce 89
+	'^'  reduce 89
+	'&'  reduce 89
+	EQ  reduce 89
+	NEQ  reduce 89
+	NLT  reduce 89
+	NMT  reduce 89
+	'<'  reduce 89
+	'>'  reduce 89
+
+
+state 127
+	expr : expr . '+' expr  (82)
+	expr : expr . '-' expr  (83)
+	expr : expr . '*' expr  (84)
+	expr : expr . '/' expr  (85)
+	expr : expr . '%' expr  (86)
+	expr : expr . '<' expr  (87)
+	expr : expr . '>' expr  (88)
+	expr : expr . NLT expr  (89)
+	expr : expr . NMT expr  (90)
+	expr : expr NMT expr .  (90)
+	expr : expr . EQ expr  (91)
+	expr : expr . NEQ expr  (92)
+	expr : expr . AND expr  (93)
+	expr : expr . OR expr  (94)
+	expr : expr . '^' expr  (95)
+	expr : expr . '&' expr  (96)
+	expr : expr . '|' expr  (97)
+	expr : expr . LS expr  (98)
+	expr : expr . RS expr  (99)
+
+	LS  shift 97
+	RS  shift 98
+	'+'  shift 99
+	'-'  shift 100
+	'*'  shift 101
+	'/'  shift 102
+	'%'  shift 103
+	','  reduce 90
+	')'  reduce 90
+	':'  reduce 90
+	';'  reduce 90
+	']'  reduce 90
+	OR  reduce 90
+	AND  reduce 90
+	'|'  reduce 90
+	'^'  reduce 90
+	'&'  reduce 90
+	EQ  reduce 90
+	NEQ  reduce 90
+	NLT  reduce 90
+	NMT  reduce 90
+	'<'  reduce 90
+	'>'  reduce 90
+
+
+state 128
+	expr : expr . '+' expr  (82)
+	expr : expr . '-' expr  (83)
+	expr : expr . '*' expr  (84)
+	expr : expr . '/' expr  (85)
+	expr : expr . '%' expr  (86)
+	expr : expr . '<' expr  (87)
+	expr : expr '<' expr .  (87)
+	expr : expr . '>' expr  (88)
+	expr : expr . NLT expr  (89)
+	expr : expr . NMT expr  (90)
+	expr : expr . EQ expr  (91)
+	expr : expr . NEQ expr  (92)
+	expr : expr . AND expr  (93)
+	expr : expr . OR expr  (94)
+	expr : expr . '^' expr  (95)
+	expr : expr . '&' expr  (96)
+	expr : expr . '|' expr  (97)
+	expr : expr . LS expr  (98)
+	expr : expr . RS expr  (99)
+
+	LS  shift 97
+	RS  shift 98
+	'+'  shift 99
+	'-'  shift 100
+	'*'  shift 101
+	'/'  shift 102
+	'%'  shift 103
+	','  reduce 87
+	')'  reduce 87
+	':'  reduce 87
+	';'  reduce 87
+	']'  reduce 87
+	OR  reduce 87
+	AND  reduce 87
+	'|'  reduce 87
+	'^'  reduce 87
+	'&'  reduce 87
+	EQ  reduce 87
+	NEQ  reduce 87
+	NLT  reduce 87
+	NMT  reduce 87
+	'<'  reduce 87
+	'>'  reduce 87
+
+
+state 129
+	expr : expr . '+' expr  (82)
+	expr : expr . '-' expr  (83)
+	expr : expr . '*' expr  (84)
+	expr : expr . '/' expr  (85)
+	expr : expr . '%' expr  (86)
+	expr : expr . '<' expr  (87)
+	expr : expr . '>' expr  (88)
+	expr : expr '>' expr .  (88)
+	expr : expr . NLT expr  (89)
+	expr : expr . NMT expr  (90)
+	expr : expr . EQ expr  (91)
+	expr : expr . NEQ expr  (92)
+	expr : expr . AND expr  (93)
+	expr : expr . OR expr  (94)
+	expr : expr . '^' expr  (95)
+	expr : expr . '&' expr  (96)
+	expr : expr . '|' expr  (97)
+	expr : expr . LS expr  (98)
+	expr : expr . RS expr  (99)
+
+	LS  shift 97
+	RS  shift 98
+	'+'  shift 99
+	'-'  shift 100
+	'*'  shift 101
+	'/'  shift 102
+	'%'  shift 103
+	','  reduce 88
+	')'  reduce 88
+	':'  reduce 88
+	';'  reduce 88
+	']'  reduce 88
+	OR  reduce 88
+	AND  reduce 88
+	'|'  reduce 88
+	'^'  reduce 88
+	'&'  reduce 88
+	EQ  reduce 88
+	NEQ  reduce 88
+	NLT  reduce 88
+	NMT  reduce 88
+	'<'  reduce 88
+	'>'  reduce 88
+
+
+state 130
+	expr : expr . '+' expr  (82)
+	expr : expr . '-' expr  (83)
+	expr : expr . '*' expr  (84)
+	expr : expr . '/' expr  (85)
+	expr : expr . '%' expr  (86)
+	expr : expr . '<' expr  (87)
+	expr : expr . '>' expr  (88)
+	expr : expr . NLT expr  (89)
+	expr : expr . NMT expr  (90)
+	expr : expr . EQ expr  (91)
+	expr : expr . NEQ expr  (92)
+	expr : expr . AND expr  (93)
+	expr : expr . OR expr  (94)
+	expr : expr . '^' expr  (95)
+	expr : expr . '&' expr  (96)
+	expr : expr . '|' expr  (97)
+	expr : expr . LS expr  (98)
+	expr : expr LS expr .  (98)
+	expr : expr . RS expr  (99)
+
+	'+'  shift 99
+	'-'  shift 100
+	'*'  shift 101
+	'/'  shift 102
+	'%'  shift 103
+	','  reduce 98
+	')'  reduce 98
+	':'  reduce 98
+	';'  reduce 98
+	']'  reduce 98
+	OR  reduce 98
+	AND  reduce 98
+	'|'  reduce 98
+	'^'  reduce 98
+	'&'  reduce 98
+	EQ  reduce 98
+	NEQ  reduce 98
+	NLT  reduce 98
+	NMT  reduce 98
+	'<'  reduce 98
+	'>'  reduce 98
+	LS  reduce 98
+	RS  reduce 98
+
+
+state 131
+	expr : expr . '+' expr  (82)
+	expr : expr . '-' expr  (83)
+	expr : expr . '*' expr  (84)
+	expr : expr . '/' expr  (85)
+	expr : expr . '%' expr  (86)
+	expr : expr . '<' expr  (87)
+	expr : expr . '>' expr  (88)
+	expr : expr . NLT expr  (89)
+	expr : expr . NMT expr  (90)
+	expr : expr . EQ expr  (91)
+	expr : expr . NEQ expr  (92)
+	expr : expr . AND expr  (93)
+	expr : expr . OR expr  (94)
+	expr : expr . '^' expr  (95)
+	expr : expr . '&' expr  (96)
+	expr : expr . '|' expr  (97)
+	expr : expr . LS expr  (98)
+	expr : expr . RS expr  (99)
+	expr : expr RS expr .  (99)
+
+	'+'  shift 99
+	'-'  shift 100
+	'*'  shift 101
+	'/'  shift 102
+	'%'  shift 103
+	','  reduce 99
+	')'  reduce 99
+	':'  reduce 99
+	';'  reduce 99
+	']'  reduce 99
+	OR  reduce 99
+	AND  reduce 99
+	'|'  reduce 99
+	'^'  reduce 99
+	'&'  reduce 99
+	EQ  reduce 99
+	NEQ  reduce 99
+	NLT  reduce 99
+	NMT  reduce 99
+	'<'  reduce 99
+	'>'  reduce 99
+	LS  reduce 99
+	RS  reduce 99
+
+
+state 132
+	expr : expr . '+' expr  (82)
+	expr : expr '+' expr .  (82)
+	expr : expr . '-' expr  (83)
+	expr : expr . '*' expr  (84)
+	expr : expr . '/' expr  (85)
+	expr : expr . '%' expr  (86)
+	expr : expr . '<' expr  (87)
+	expr : expr . '>' expr  (88)
+	expr : expr . NLT expr  (89)
+	expr : expr . NMT expr  (90)
+	expr : expr . EQ expr  (91)
+	expr : expr . NEQ expr  (92)
+	expr : expr . AND expr  (93)
+	expr : expr . OR expr  (94)
+	expr : expr . '^' expr  (95)
+	expr : expr . '&' expr  (96)
+	expr : expr . '|' expr  (97)
+	expr : expr . LS expr  (98)
+	expr : expr . RS expr  (99)
+
+	'*'  shift 101
+	'/'  shift 102
+	'%'  shift 103
+	','  reduce 82
+	')'  reduce 82
+	':'  reduce 82
+	';'  reduce 82
+	']'  reduce 82
+	OR  reduce 82
+	AND  reduce 82
+	'|'  reduce 82
+	'^'  reduce 82
+	'&'  reduce 82
+	EQ  reduce 82
+	NEQ  reduce 82
+	NLT  reduce 82
+	NMT  reduce 82
+	'<'  reduce 82
+	'>'  reduce 82
+	LS  reduce 82
+	RS  reduce 82
+	'+'  reduce 82
+	'-'  reduce 82
+
+
+state 133
+	expr : expr . '+' expr  (82)
+	expr : expr . '-' expr  (83)
+	expr : expr '-' expr .  (83)
+	expr : expr . '*' expr  (84)
+	expr : expr . '/' expr  (85)
+	expr : expr . '%' expr  (86)
+	expr : expr . '<' expr  (87)
+	expr : expr . '>' expr  (88)
+	expr : expr . NLT expr  (89)
+	expr : expr . NMT expr  (90)
+	expr : expr . EQ expr  (91)
+	expr : expr . NEQ expr  (92)
+	expr : expr . AND expr  (93)
+	expr : expr . OR expr  (94)
+	expr : expr . '^' expr  (95)
+	expr : expr . '&' expr  (96)
+	expr : expr . '|' expr  (97)
+	expr : expr . LS expr  (98)
+	expr : expr . RS expr  (99)
+
+	'*'  shift 101
+	'/'  shift 102
+	'%'  shift 103
+	','  reduce 83
+	')'  reduce 83
+	':'  reduce 83
+	';'  reduce 83
+	']'  reduce 83
+	OR  reduce 83
+	AND  reduce 83
+	'|'  reduce 83
+	'^'  reduce 83
+	'&'  reduce 83
+	EQ  reduce 83
+	NEQ  reduce 83
+	NLT  reduce 83
+	NMT  reduce 83
+	'<'  reduce 83
+	'>'  reduce 83
+	LS  reduce 83
+	RS  reduce 83
+	'+'  reduce 83
+	'-'  reduce 83
+
+
+state 134
+	expr : expr . '+' expr  (82)
+	expr : expr . '-' expr  (83)
+	expr : expr . '*' expr  (84)
+	expr : expr '*' expr .  (84)
+	expr : expr . '/' expr  (85)
+	expr : expr . '%' expr  (86)
+	expr : expr . '<' expr  (87)
+	expr : expr . '>' expr  (88)
+	expr : expr . NLT expr  (89)
+	expr : expr . NMT expr  (90)
+	expr : expr . EQ expr  (91)
+	expr : expr . NEQ expr  (92)
+	expr : expr . AND expr  (93)
+	expr : expr . OR expr  (94)
+	expr : expr . '^' expr  (95)
+	expr : expr . '&' expr  (96)
+	expr : expr . '|' expr  (97)
+	expr : expr . LS expr  (98)
+	expr : expr . RS expr  (99)
+
+	.  reduce 84
+
+
+state 135
+	expr : expr . '+' expr  (82)
+	expr : expr . '-' expr  (83)
+	expr : expr . '*' expr  (84)
+	expr : expr . '/' expr  (85)
+	expr : expr '/' expr .  (85)
+	expr : expr . '%' expr  (86)
+	expr : expr . '<' expr  (87)
+	expr : expr . '>' expr  (88)
+	expr : expr . NLT expr  (89)
+	expr : expr . NMT expr  (90)
+	expr : expr . EQ expr  (91)
+	expr : expr . NEQ expr  (92)
+	expr : expr . AND expr  (93)
+	expr : expr . OR expr  (94)
+	expr : expr . '^' expr  (95)
+	expr : expr . '&' expr  (96)
+	expr : expr . '|' expr  (97)
+	expr : expr . LS expr  (98)
+	expr : expr . RS expr  (99)
+
+	.  reduce 85
+
+
+state 136
+	expr : expr . '+' expr  (82)
+	expr : expr . '-' expr  (83)
+	expr : expr . '*' expr  (84)
+	expr : expr . '/' expr  (85)
+	expr : expr . '%' expr  (86)
+	expr : expr '%' expr .  (86)
+	expr : expr . '<' expr  (87)
+	expr : expr . '>' expr  (88)
+	expr : expr . NLT expr  (89)
+	expr : expr . NMT expr  (90)
+	expr : expr . EQ expr  (91)
+	expr : expr . NEQ expr  (92)
+	expr : expr . AND expr  (93)
+	expr : expr . OR expr  (94)
+	expr : expr . '^' expr  (95)
+	expr : expr . '&' expr  (96)
+	expr : expr . '|' expr  (97)
+	expr : expr . LS expr  (98)
+	expr : expr . RS expr  (99)
+
+	.  reduce 86
+
+
+state 137
+	compound_stmt_func : '{' . '}'  (7)
+	compound_stmt_func : '{' . $$1 stmts $$2 '}'  (10)
+	$$1 : .  (8)
+
+	'}'  shift 147
+	NUL  reduce 8
+	RETURN  reduce 8
+	BREAK  reduce 8
+	CONTINUE  reduce 8
+	SWITCH  reduce 8
+	CONST  reduce 8
+	SIGNED_OR_NOT  reduce 8
+	LONG_OR_SHORT  reduce 8
+	KEY_INT  reduce 8
+	KEY_CHAR  reduce 8
+	KEY_OTHER_TYPE  reduce 8
+	ID  reduce 8
+	STRING  reduce 8
+	CHAR  reduce 8
+	DIGITAL_WRITE  reduce 8
+	DELAY  reduce 8
+	INT  reduce 8
+	IF  reduce 8
+	WHILE  reduce 8
+	FOR  reduce 8
+	DO  reduce 8
+	FLOAT  reduce 8
+	'('  reduce 8
+	'{'  reduce 8
+	'&'  reduce 8
+	'+'  reduce 8
+	'-'  reduce 8
+	'*'  reduce 8
+	INC  reduce 8
+	DEC  reduce 8
+	'!'  reduce 8
+	'~'  reduce 8
+
+	$$1  goto 148
+
+
+state 138
+	func_def : type ident '(' params ')' $$11 compound_stmt_func .  (53)
+
+	.  reduce 53
+
+
+state 139
+	call_params : call_params ',' . expr  (128)
+
+	NUL  shift 40
+	ID  shift 41
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	FLOAT  shift 47
+	'('  shift 48
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 52
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	.  error
+
+	expr  goto 149
+	factor  goto 58
+	_expr  goto 59
+	array_subsc  goto 60
+
+
+state 140
+	factor : ID '(' call_params ')' .  (123)
+
+	.  reduce 123
+
+
+state 141
+	expr : ID '[' expr ']' . '=' expr  (102)
+	array_subsc : ID '[' expr ']' .  (129)
+
+	'='  shift 150
+	','  reduce 129
+	')'  reduce 129
+	':'  reduce 129
+	';'  reduce 129
+	']'  reduce 129
+	OR  reduce 129
+	AND  reduce 129
+	'|'  reduce 129
+	'^'  reduce 129
+	'&'  reduce 129
+	EQ  reduce 129
+	NEQ  reduce 129
+	NLT  reduce 129
+	NMT  reduce 129
+	'<'  reduce 129
+	'>'  reduce 129
+	LS  reduce 129
+	RS  reduce 129
+	'+'  reduce 129
+	'-'  reduce 129
+	'*'  reduce 129
+	'/'  reduce 129
+	'%'  reduce 129
+
+
+state 142
+	factor : DIGITAL_WRITE '(' expr ',' . HIGH_LOW ')'  (125)
+
+	HIGH_LOW  shift 151
+	.  error
+
+
+state 143
+	factor : DELAY '(' expr ')' .  (126)
+
+	.  reduce 126
+
+
+state 144
+	_expr : '(' type ')' _expr .  (112)
+
+	.  reduce 112
+
+
+state 145
+	expr : expr . '+' expr  (82)
+	expr : expr . '-' expr  (83)
+	expr : expr . '*' expr  (84)
+	expr : expr . '/' expr  (85)
+	expr : expr . '%' expr  (86)
+	expr : expr . '<' expr  (87)
+	expr : expr . '>' expr  (88)
+	expr : expr . NLT expr  (89)
+	expr : expr . NMT expr  (90)
+	expr : expr . EQ expr  (91)
+	expr : expr . NEQ expr  (92)
+	expr : expr . AND expr  (93)
+	expr : expr . OR expr  (94)
+	expr : expr . '^' expr  (95)
+	expr : expr . '&' expr  (96)
+	expr : expr . '|' expr  (97)
+	expr : expr . LS expr  (98)
+	expr : expr . RS expr  (99)
+	array_subsc : ID '[' expr . ']'  (129)
+
+	']'  shift 152
+	OR  shift 86
+	AND  shift 87
+	'|'  shift 88
+	'^'  shift 89
+	'&'  shift 90
+	EQ  shift 91
+	NEQ  shift 92
+	NLT  shift 93
+	NMT  shift 94
+	'<'  shift 95
+	'>'  shift 96
+	LS  shift 97
+	RS  shift 98
+	'+'  shift 99
+	'-'  shift 100
+	'*'  shift 101
+	'/'  shift 102
+	'%'  shift 103
+	.  error
+
+
+state 146
+	expr : expr . '+' expr  (82)
+	expr : expr . '-' expr  (83)
+	expr : expr . '*' expr  (84)
+	expr : expr . '/' expr  (85)
+	expr : expr . '%' expr  (86)
+	expr : expr . '<' expr  (87)
+	expr : expr . '>' expr  (88)
+	expr : expr . NLT expr  (89)
+	expr : expr . NMT expr  (90)
+	expr : expr . EQ expr  (91)
+	expr : expr . NEQ expr  (92)
+	expr : expr . AND expr  (93)
+	expr : expr . OR expr  (94)
+	expr : expr . '^' expr  (95)
+	expr : expr . '&' expr  (96)
+	expr : expr . '|' expr  (97)
+	expr : expr . LS expr  (98)
+	expr : expr . RS expr  (99)
+	expr : '*' factor '=' expr .  (101)
+
+	OR  shift 86
+	AND  shift 87
+	'|'  shift 88
+	'^'  shift 89
+	'&'  shift 90
+	EQ  shift 91
+	NEQ  shift 92
+	NLT  shift 93
+	NMT  shift 94
+	'<'  shift 95
+	'>'  shift 96
+	LS  shift 97
+	RS  shift 98
+	'+'  shift 99
+	'-'  shift 100
+	'*'  shift 101
+	'/'  shift 102
+	'%'  shift 103
+	','  reduce 101
+	')'  reduce 101
+	':'  reduce 101
+	';'  reduce 101
+	']'  reduce 101
+
+
+state 147
+	compound_stmt_func : '{' '}' .  (7)
+
+	.  reduce 7
+
+
+state 148
+	compound_stmt_func : '{' $$1 . stmts $$2 '}'  (10)
+
+	NUL  shift 40
+	RETURN  shift 153
+	BREAK  shift 154
+	CONTINUE  shift 155
+	SWITCH  shift 156
+	CONST  shift 1
+	SIGNED_OR_NOT  shift 2
+	LONG_OR_SHORT  shift 3
+	KEY_INT  shift 4
+	KEY_CHAR  shift 5
+	KEY_OTHER_TYPE  shift 6
+	ID  shift 41
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	IF  shift 157
+	WHILE  shift 158
+	FOR  shift 159
+	DO  shift 160
+	FLOAT  shift 47
+	'('  shift 48
+	'{'  shift 161
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 52
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	.  error
+
+	_if_stmt  goto 162
+	stmts  goto 163
+	_stmt  goto 164
+	for_stmt  goto 165
+	compound_stmt  goto 166
+	while_stmt  goto 167
+	switch_stmt  goto 168
+	if_stmt  goto 169
+	stmt  goto 170
+	var_decl  goto 171
+	func_decl  goto 172
+	scalar_decl  goto 173
+	array_decl  goto 174
+	type  goto 175
+	type1  goto 14
+	type0  goto 15
+	expr  goto 176
+	factor  goto 58
+	_expr  goto 59
+	array_subsc  goto 60
+
+
+state 149
+	expr : expr . '+' expr  (82)
+	expr : expr . '-' expr  (83)
+	expr : expr . '*' expr  (84)
+	expr : expr . '/' expr  (85)
+	expr : expr . '%' expr  (86)
+	expr : expr . '<' expr  (87)
+	expr : expr . '>' expr  (88)
+	expr : expr . NLT expr  (89)
+	expr : expr . NMT expr  (90)
+	expr : expr . EQ expr  (91)
+	expr : expr . NEQ expr  (92)
+	expr : expr . AND expr  (93)
+	expr : expr . OR expr  (94)
+	expr : expr . '^' expr  (95)
+	expr : expr . '&' expr  (96)
+	expr : expr . '|' expr  (97)
+	expr : expr . LS expr  (98)
+	expr : expr . RS expr  (99)
+	call_params : call_params ',' expr .  (128)
+
+	OR  shift 86
+	AND  shift 87
+	'|'  shift 88
+	'^'  shift 89
+	'&'  shift 90
+	EQ  shift 91
+	NEQ  shift 92
+	NLT  shift 93
+	NMT  shift 94
+	'<'  shift 95
+	'>'  shift 96
+	LS  shift 97
+	RS  shift 98
+	'+'  shift 99
+	'-'  shift 100
+	'*'  shift 101
+	'/'  shift 102
+	'%'  shift 103
+	','  reduce 128
+	')'  reduce 128
+
+
+state 150
+	expr : ID '[' expr ']' '=' . expr  (102)
+
+	NUL  shift 40
+	ID  shift 41
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	FLOAT  shift 47
+	'('  shift 48
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 52
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	.  error
+
+	expr  goto 177
+	factor  goto 58
+	_expr  goto 59
+	array_subsc  goto 60
+
+
+state 151
+	factor : DIGITAL_WRITE '(' expr ',' HIGH_LOW . ')'  (125)
+
+	')'  shift 178
+	.  error
+
+
+state 152
+	array_subsc : ID '[' expr ']' .  (129)
+
+	.  reduce 129
+
+
+state 153
+	stmt : RETURN . ';'  (44)
+	stmt : RETURN . expr ';'  (45)
+
+	NUL  shift 40
+	ID  shift 41
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	FLOAT  shift 47
+	'('  shift 48
+	';'  shift 179
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 52
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	.  error
+
+	expr  goto 180
+	factor  goto 58
+	_expr  goto 59
+	array_subsc  goto 60
+
+
+state 154
+	stmt : BREAK . ';'  (46)
+
+	';'  shift 181
+	.  error
+
+
+state 155
+	stmt : CONTINUE . ';'  (47)
+
+	';'  shift 182
+	.  error
+
+
+state 156
+	switch_stmt : SWITCH . '(' expr ')' '{' switch_clauses '}'  (27)
+	switch_stmt : SWITCH . '(' expr ')' '{' '}'  (28)
+
+	'('  shift 183
+	.  error
+
+
+state 157
+	_if_stmt : IF . '(' expr ')' $$10 compound_stmt  (32)
+
+	'('  shift 184
+	.  error
+
+
+state 158
+	while_stmt : WHILE . '(' $$6 expr $$7 ')' compound_stmt  (23)
+
+	'('  shift 185
+	.  error
+
+
+state 159
+	for_stmt : FOR . '(' expr ';' $$3 expr ';' $$4 expr ')' $$5 compound_stmt  (20)
+
+	'('  shift 186
+	.  error
+
+
+state 160
+	while_stmt : DO . $$8 compound_stmt WHILE '(' expr $$9 ')' ';'  (26)
+	$$8 : .  (24)
+
+	.  reduce 24
+
+	$$8  goto 187
+
+
+state 161
+	compound_stmt : '{' . '}'  (11)
+	compound_stmt : '{' . stmts '}'  (12)
+
+	NUL  shift 40
+	RETURN  shift 153
+	BREAK  shift 154
+	CONTINUE  shift 155
+	SWITCH  shift 156
+	CONST  shift 1
+	SIGNED_OR_NOT  shift 2
+	LONG_OR_SHORT  shift 3
+	KEY_INT  shift 4
+	KEY_CHAR  shift 5
+	KEY_OTHER_TYPE  shift 6
+	ID  shift 41
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	IF  shift 157
+	WHILE  shift 158
+	FOR  shift 159
+	DO  shift 160
+	FLOAT  shift 47
+	'('  shift 48
+	'{'  shift 161
+	'}'  shift 188
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 52
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	.  error
+
+	_if_stmt  goto 162
+	stmts  goto 189
+	_stmt  goto 164
+	for_stmt  goto 165
+	compound_stmt  goto 166
+	while_stmt  goto 167
+	switch_stmt  goto 168
+	if_stmt  goto 169
+	stmt  goto 170
+	var_decl  goto 171
+	func_decl  goto 172
+	scalar_decl  goto 173
+	array_decl  goto 174
+	type  goto 175
+	type1  goto 14
+	type0  goto 15
+	expr  goto 176
+	factor  goto 58
+	_expr  goto 59
+	array_subsc  goto 60
+
+
+state 162
+	if_stmt : _if_stmt .  (29)
+	if_stmt : _if_stmt . ELSE compound_stmt  (30)
+
+	ELSE  shift 190
+	NUL  reduce 29
+	RETURN  reduce 29
+	BREAK  reduce 29
+	CONTINUE  reduce 29
+	CASE  reduce 29
+	SWITCH  reduce 29
+	DEFAULT  reduce 29
+	CONST  reduce 29
+	SIGNED_OR_NOT  reduce 29
+	LONG_OR_SHORT  reduce 29
+	KEY_INT  reduce 29
+	KEY_CHAR  reduce 29
+	KEY_OTHER_TYPE  reduce 29
+	ID  reduce 29
+	STRING  reduce 29
+	CHAR  reduce 29
+	DIGITAL_WRITE  reduce 29
+	DELAY  reduce 29
+	INT  reduce 29
+	IF  reduce 29
+	WHILE  reduce 29
+	FOR  reduce 29
+	DO  reduce 29
+	FLOAT  reduce 29
+	'('  reduce 29
+	'{'  reduce 29
+	'}'  reduce 29
+	'&'  reduce 29
+	'+'  reduce 29
+	'-'  reduce 29
+	'*'  reduce 29
+	INC  reduce 29
+	DEC  reduce 29
+	'!'  reduce 29
+	'~'  reduce 29
+
+
+state 163
+	compound_stmt_func : '{' $$1 stmts . $$2 '}'  (10)
+	stmts : stmts . _stmt  (14)
+	$$2 : .  (9)
+
+	NUL  shift 40
+	RETURN  shift 153
+	BREAK  shift 154
+	CONTINUE  shift 155
+	SWITCH  shift 156
+	CONST  shift 1
+	SIGNED_OR_NOT  shift 2
+	LONG_OR_SHORT  shift 3
+	KEY_INT  shift 4
+	KEY_CHAR  shift 5
+	KEY_OTHER_TYPE  shift 6
+	ID  shift 41
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	IF  shift 157
+	WHILE  shift 158
+	FOR  shift 159
+	DO  shift 160
+	FLOAT  shift 47
+	'('  shift 48
+	'{'  shift 161
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 52
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	'}'  reduce 9
+
+	_if_stmt  goto 162
+	_stmt  goto 191
+	for_stmt  goto 165
+	compound_stmt  goto 166
+	while_stmt  goto 167
+	switch_stmt  goto 168
+	if_stmt  goto 169
+	stmt  goto 170
+	var_decl  goto 171
+	func_decl  goto 172
+	scalar_decl  goto 173
+	array_decl  goto 174
+	type  goto 175
+	type1  goto 14
+	type0  goto 15
+	expr  goto 176
+	factor  goto 58
+	_expr  goto 59
+	array_subsc  goto 60
+	$$2  goto 192
+
+
+state 164
+	stmts : _stmt .  (13)
+
+	.  reduce 13
+
+
+state 165
+	stmt : for_stmt .  (40)
+
+	.  reduce 40
+
+
+state 166
+	stmt : compound_stmt .  (39)
+
+	.  reduce 39
+
+
+state 167
+	stmt : while_stmt .  (41)
+
+	.  reduce 41
+
+
+state 168
+	stmt : switch_stmt .  (42)
+
+	.  reduce 42
+
+
+state 169
+	stmt : if_stmt .  (43)
+
+	.  reduce 43
+
+
+state 170
+	_stmt : stmt .  (15)
+
+	.  reduce 15
+
+
+state 171
+	_stmt : var_decl .  (16)
+
+	.  reduce 16
+
+
+state 172
+	var_decl : func_decl .  (51)
+
+	.  reduce 51
+
+
+state 173
+	var_decl : scalar_decl .  (49)
+
+	.  reduce 49
+
+
+state 174
+	var_decl : array_decl .  (50)
+
+	.  reduce 50
+
+
+state 175
+	func_decl : type . ident '(' params ')' ';'  (54)
+	scalar_decl : type . idents ';'  (55)
+	array_decl : type . array ';'  (56)
+
+	ID  shift 20
+	'*'  shift 21
+	.  error
+
+	idents  goto 22
+	_ident  goto 23
+	array  goto 24
+	ident  goto 193
+
+
+state 176
+	stmt : expr . ';'  (48)
+	expr : expr . '+' expr  (82)
+	expr : expr . '-' expr  (83)
+	expr : expr . '*' expr  (84)
+	expr : expr . '/' expr  (85)
+	expr : expr . '%' expr  (86)
+	expr : expr . '<' expr  (87)
+	expr : expr . '>' expr  (88)
+	expr : expr . NLT expr  (89)
+	expr : expr . NMT expr  (90)
+	expr : expr . EQ expr  (91)
+	expr : expr . NEQ expr  (92)
+	expr : expr . AND expr  (93)
+	expr : expr . OR expr  (94)
+	expr : expr . '^' expr  (95)
+	expr : expr . '&' expr  (96)
+	expr : expr . '|' expr  (97)
+	expr : expr . LS expr  (98)
+	expr : expr . RS expr  (99)
+
+	';'  shift 194
+	OR  shift 86
+	AND  shift 87
+	'|'  shift 88
+	'^'  shift 89
+	'&'  shift 90
+	EQ  shift 91
+	NEQ  shift 92
+	NLT  shift 93
+	NMT  shift 94
+	'<'  shift 95
+	'>'  shift 96
+	LS  shift 97
+	RS  shift 98
+	'+'  shift 99
+	'-'  shift 100
+	'*'  shift 101
+	'/'  shift 102
+	'%'  shift 103
+	.  error
+
+
+state 177
+	expr : expr . '+' expr  (82)
+	expr : expr . '-' expr  (83)
+	expr : expr . '*' expr  (84)
+	expr : expr . '/' expr  (85)
+	expr : expr . '%' expr  (86)
+	expr : expr . '<' expr  (87)
+	expr : expr . '>' expr  (88)
+	expr : expr . NLT expr  (89)
+	expr : expr . NMT expr  (90)
+	expr : expr . EQ expr  (91)
+	expr : expr . NEQ expr  (92)
+	expr : expr . AND expr  (93)
+	expr : expr . OR expr  (94)
+	expr : expr . '^' expr  (95)
+	expr : expr . '&' expr  (96)
+	expr : expr . '|' expr  (97)
+	expr : expr . LS expr  (98)
+	expr : expr . RS expr  (99)
+	expr : ID '[' expr ']' '=' expr .  (102)
+
+	OR  shift 86
+	AND  shift 87
+	'|'  shift 88
+	'^'  shift 89
+	'&'  shift 90
+	EQ  shift 91
+	NEQ  shift 92
+	NLT  shift 93
+	NMT  shift 94
+	'<'  shift 95
+	'>'  shift 96
+	LS  shift 97
+	RS  shift 98
+	'+'  shift 99
+	'-'  shift 100
+	'*'  shift 101
+	'/'  shift 102
+	'%'  shift 103
+	','  reduce 102
+	')'  reduce 102
+	':'  reduce 102
+	';'  reduce 102
+	']'  reduce 102
+
+
+state 178
+	factor : DIGITAL_WRITE '(' expr ',' HIGH_LOW ')' .  (125)
+
+	.  reduce 125
+
+
+state 179
+	stmt : RETURN ';' .  (44)
+
+	.  reduce 44
+
+
+state 180
+	stmt : RETURN expr . ';'  (45)
+	expr : expr . '+' expr  (82)
+	expr : expr . '-' expr  (83)
+	expr : expr . '*' expr  (84)
+	expr : expr . '/' expr  (85)
+	expr : expr . '%' expr  (86)
+	expr : expr . '<' expr  (87)
+	expr : expr . '>' expr  (88)
+	expr : expr . NLT expr  (89)
+	expr : expr . NMT expr  (90)
+	expr : expr . EQ expr  (91)
+	expr : expr . NEQ expr  (92)
+	expr : expr . AND expr  (93)
+	expr : expr . OR expr  (94)
+	expr : expr . '^' expr  (95)
+	expr : expr . '&' expr  (96)
+	expr : expr . '|' expr  (97)
+	expr : expr . LS expr  (98)
+	expr : expr . RS expr  (99)
+
+	';'  shift 195
+	OR  shift 86
+	AND  shift 87
+	'|'  shift 88
+	'^'  shift 89
+	'&'  shift 90
+	EQ  shift 91
+	NEQ  shift 92
+	NLT  shift 93
+	NMT  shift 94
+	'<'  shift 95
+	'>'  shift 96
+	LS  shift 97
+	RS  shift 98
+	'+'  shift 99
+	'-'  shift 100
+	'*'  shift 101
+	'/'  shift 102
+	'%'  shift 103
+	.  error
+
+
+state 181
+	stmt : BREAK ';' .  (46)
+
+	.  reduce 46
+
+
+state 182
+	stmt : CONTINUE ';' .  (47)
+
+	.  reduce 47
+
+
+state 183
+	switch_stmt : SWITCH '(' . expr ')' '{' switch_clauses '}'  (27)
+	switch_stmt : SWITCH '(' . expr ')' '{' '}'  (28)
+
+	NUL  shift 40
+	ID  shift 41
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	FLOAT  shift 47
+	'('  shift 48
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 52
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	.  error
+
+	expr  goto 196
+	factor  goto 58
+	_expr  goto 59
+	array_subsc  goto 60
+
+
+state 184
+	_if_stmt : IF '(' . expr ')' $$10 compound_stmt  (32)
+
+	NUL  shift 40
+	ID  shift 41
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	FLOAT  shift 47
+	'('  shift 48
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 52
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	.  error
+
+	expr  goto 197
+	factor  goto 58
+	_expr  goto 59
+	array_subsc  goto 60
+
+
+state 185
+	while_stmt : WHILE '(' . $$6 expr $$7 ')' compound_stmt  (23)
+	$$6 : .  (21)
+
+	.  reduce 21
+
+	$$6  goto 198
+
+
+state 186
+	for_stmt : FOR '(' . expr ';' $$3 expr ';' $$4 expr ')' $$5 compound_stmt  (20)
+
+	NUL  shift 40
+	ID  shift 41
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	FLOAT  shift 47
+	'('  shift 48
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 52
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	.  error
+
+	expr  goto 199
+	factor  goto 58
+	_expr  goto 59
+	array_subsc  goto 60
+
+
+state 187
+	while_stmt : DO $$8 . compound_stmt WHILE '(' expr $$9 ')' ';'  (26)
+
+	'{'  shift 161
+	.  error
+
+	compound_stmt  goto 200
+
+
+state 188
+	compound_stmt : '{' '}' .  (11)
+
+	.  reduce 11
+
+
+state 189
+	compound_stmt : '{' stmts . '}'  (12)
+	stmts : stmts . _stmt  (14)
+
+	NUL  shift 40
+	RETURN  shift 153
+	BREAK  shift 154
+	CONTINUE  shift 155
+	SWITCH  shift 156
+	CONST  shift 1
+	SIGNED_OR_NOT  shift 2
+	LONG_OR_SHORT  shift 3
+	KEY_INT  shift 4
+	KEY_CHAR  shift 5
+	KEY_OTHER_TYPE  shift 6
+	ID  shift 41
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	IF  shift 157
+	WHILE  shift 158
+	FOR  shift 159
+	DO  shift 160
+	FLOAT  shift 47
+	'('  shift 48
+	'{'  shift 161
+	'}'  shift 201
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 52
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	.  error
+
+	_if_stmt  goto 162
+	_stmt  goto 191
+	for_stmt  goto 165
+	compound_stmt  goto 166
+	while_stmt  goto 167
+	switch_stmt  goto 168
+	if_stmt  goto 169
+	stmt  goto 170
+	var_decl  goto 171
+	func_decl  goto 172
+	scalar_decl  goto 173
+	array_decl  goto 174
+	type  goto 175
+	type1  goto 14
+	type0  goto 15
+	expr  goto 176
+	factor  goto 58
+	_expr  goto 59
+	array_subsc  goto 60
+
+
+state 190
+	if_stmt : _if_stmt ELSE . compound_stmt  (30)
+
+	'{'  shift 161
+	.  error
+
+	compound_stmt  goto 202
+
+
+state 191
+	stmts : stmts _stmt .  (14)
+
+	.  reduce 14
+
+
+state 192
+	compound_stmt_func : '{' $$1 stmts $$2 . '}'  (10)
+
+	'}'  shift 203
+	.  error
+
+
+state 193
+	func_decl : type ident . '(' params ')' ';'  (54)
+	_ident : ident .  (59)
+	_ident : ident . '=' expr  (60)
+	array : ident . '[' INT ']'  (61)
+
+	'('  shift 204
+	'['  shift 31
+	'='  shift 32
+	','  reduce 59
+	';'  reduce 59
+
+
+state 194
+	stmt : expr ';' .  (48)
+
+	.  reduce 48
+
+
+state 195
+	stmt : RETURN expr ';' .  (45)
+
+	.  reduce 45
+
+
+state 196
+	switch_stmt : SWITCH '(' expr . ')' '{' switch_clauses '}'  (27)
+	switch_stmt : SWITCH '(' expr . ')' '{' '}'  (28)
+	expr : expr . '+' expr  (82)
+	expr : expr . '-' expr  (83)
+	expr : expr . '*' expr  (84)
+	expr : expr . '/' expr  (85)
+	expr : expr . '%' expr  (86)
+	expr : expr . '<' expr  (87)
+	expr : expr . '>' expr  (88)
+	expr : expr . NLT expr  (89)
+	expr : expr . NMT expr  (90)
+	expr : expr . EQ expr  (91)
+	expr : expr . NEQ expr  (92)
+	expr : expr . AND expr  (93)
+	expr : expr . OR expr  (94)
+	expr : expr . '^' expr  (95)
+	expr : expr . '&' expr  (96)
+	expr : expr . '|' expr  (97)
+	expr : expr . LS expr  (98)
+	expr : expr . RS expr  (99)
+
+	')'  shift 205
+	OR  shift 86
+	AND  shift 87
+	'|'  shift 88
+	'^'  shift 89
+	'&'  shift 90
+	EQ  shift 91
+	NEQ  shift 92
+	NLT  shift 93
+	NMT  shift 94
+	'<'  shift 95
+	'>'  shift 96
+	LS  shift 97
+	RS  shift 98
+	'+'  shift 99
+	'-'  shift 100
+	'*'  shift 101
+	'/'  shift 102
+	'%'  shift 103
+	.  error
+
+
+state 197
+	_if_stmt : IF '(' expr . ')' $$10 compound_stmt  (32)
+	expr : expr . '+' expr  (82)
+	expr : expr . '-' expr  (83)
+	expr : expr . '*' expr  (84)
+	expr : expr . '/' expr  (85)
+	expr : expr . '%' expr  (86)
+	expr : expr . '<' expr  (87)
+	expr : expr . '>' expr  (88)
+	expr : expr . NLT expr  (89)
+	expr : expr . NMT expr  (90)
+	expr : expr . EQ expr  (91)
+	expr : expr . NEQ expr  (92)
+	expr : expr . AND expr  (93)
+	expr : expr . OR expr  (94)
+	expr : expr . '^' expr  (95)
+	expr : expr . '&' expr  (96)
+	expr : expr . '|' expr  (97)
+	expr : expr . LS expr  (98)
+	expr : expr . RS expr  (99)
+
+	')'  shift 206
+	OR  shift 86
+	AND  shift 87
+	'|'  shift 88
+	'^'  shift 89
+	'&'  shift 90
+	EQ  shift 91
+	NEQ  shift 92
+	NLT  shift 93
+	NMT  shift 94
+	'<'  shift 95
+	'>'  shift 96
+	LS  shift 97
+	RS  shift 98
+	'+'  shift 99
+	'-'  shift 100
+	'*'  shift 101
+	'/'  shift 102
+	'%'  shift 103
+	.  error
+
+
+state 198
+	while_stmt : WHILE '(' $$6 . expr $$7 ')' compound_stmt  (23)
+
+	NUL  shift 40
+	ID  shift 41
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	FLOAT  shift 47
+	'('  shift 48
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 52
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	.  error
+
+	expr  goto 207
+	factor  goto 58
+	_expr  goto 59
+	array_subsc  goto 60
+
+
+state 199
+	for_stmt : FOR '(' expr . ';' $$3 expr ';' $$4 expr ')' $$5 compound_stmt  (20)
+	expr : expr . '+' expr  (82)
+	expr : expr . '-' expr  (83)
+	expr : expr . '*' expr  (84)
+	expr : expr . '/' expr  (85)
+	expr : expr . '%' expr  (86)
+	expr : expr . '<' expr  (87)
+	expr : expr . '>' expr  (88)
+	expr : expr . NLT expr  (89)
+	expr : expr . NMT expr  (90)
+	expr : expr . EQ expr  (91)
+	expr : expr . NEQ expr  (92)
+	expr : expr . AND expr  (93)
+	expr : expr . OR expr  (94)
+	expr : expr . '^' expr  (95)
+	expr : expr . '&' expr  (96)
+	expr : expr . '|' expr  (97)
+	expr : expr . LS expr  (98)
+	expr : expr . RS expr  (99)
+
+	';'  shift 208
+	OR  shift 86
+	AND  shift 87
+	'|'  shift 88
+	'^'  shift 89
+	'&'  shift 90
+	EQ  shift 91
+	NEQ  shift 92
+	NLT  shift 93
+	NMT  shift 94
+	'<'  shift 95
+	'>'  shift 96
+	LS  shift 97
+	RS  shift 98
+	'+'  shift 99
+	'-'  shift 100
+	'*'  shift 101
+	'/'  shift 102
+	'%'  shift 103
+	.  error
+
+
+state 200
+	while_stmt : DO $$8 compound_stmt . WHILE '(' expr $$9 ')' ';'  (26)
+
+	WHILE  shift 209
+	.  error
+
+
+state 201
+	compound_stmt : '{' stmts '}' .  (12)
+
+	.  reduce 12
+
+
+state 202
+	if_stmt : _if_stmt ELSE compound_stmt .  (30)
+
+	.  reduce 30
+
+
+state 203
+	compound_stmt_func : '{' $$1 stmts $$2 '}' .  (10)
+
+	.  reduce 10
+
+
+state 204
+	func_decl : type ident '(' . params ')' ';'  (54)
+	params : .  (62)
+
+	CONST  shift 1
+	SIGNED_OR_NOT  shift 2
+	LONG_OR_SHORT  shift 3
+	KEY_INT  shift 4
+	KEY_CHAR  shift 5
+	KEY_OTHER_TYPE  shift 6
+	')'  reduce 62
+
+	param  goto 35
+	_params  goto 36
+	params  goto 210
+	type  goto 38
+	type1  goto 14
+	type0  goto 15
+
+
+state 205
+	switch_stmt : SWITCH '(' expr ')' . '{' switch_clauses '}'  (27)
+	switch_stmt : SWITCH '(' expr ')' . '{' '}'  (28)
+
+	'{'  shift 211
+	.  error
+
+
+state 206
+	_if_stmt : IF '(' expr ')' . $$10 compound_stmt  (32)
+	$$10 : .  (31)
+
+	.  reduce 31
+
+	$$10  goto 212
+
+
+state 207
+	while_stmt : WHILE '(' $$6 expr . $$7 ')' compound_stmt  (23)
+	expr : expr . '+' expr  (82)
+	expr : expr . '-' expr  (83)
+	expr : expr . '*' expr  (84)
+	expr : expr . '/' expr  (85)
+	expr : expr . '%' expr  (86)
+	expr : expr . '<' expr  (87)
+	expr : expr . '>' expr  (88)
+	expr : expr . NLT expr  (89)
+	expr : expr . NMT expr  (90)
+	expr : expr . EQ expr  (91)
+	expr : expr . NEQ expr  (92)
+	expr : expr . AND expr  (93)
+	expr : expr . OR expr  (94)
+	expr : expr . '^' expr  (95)
+	expr : expr . '&' expr  (96)
+	expr : expr . '|' expr  (97)
+	expr : expr . LS expr  (98)
+	expr : expr . RS expr  (99)
+	$$7 : .  (22)
+
+	OR  shift 86
+	AND  shift 87
+	'|'  shift 88
+	'^'  shift 89
+	'&'  shift 90
+	EQ  shift 91
+	NEQ  shift 92
+	NLT  shift 93
+	NMT  shift 94
+	'<'  shift 95
+	'>'  shift 96
+	LS  shift 97
+	RS  shift 98
+	'+'  shift 99
+	'-'  shift 100
+	'*'  shift 101
+	'/'  shift 102
+	'%'  shift 103
+	')'  reduce 22
+
+	$$7  goto 213
+
+
+state 208
+	for_stmt : FOR '(' expr ';' . $$3 expr ';' $$4 expr ')' $$5 compound_stmt  (20)
+	$$3 : .  (17)
+
+	.  reduce 17
+
+	$$3  goto 214
+
+
+state 209
+	while_stmt : DO $$8 compound_stmt WHILE . '(' expr $$9 ')' ';'  (26)
+
+	'('  shift 215
+	.  error
+
+
+state 210
+	func_decl : type ident '(' params . ')' ';'  (54)
+
+	')'  shift 216
+	.  error
+
+
+state 211
+	switch_stmt : SWITCH '(' expr ')' '{' . switch_clauses '}'  (27)
+	switch_stmt : SWITCH '(' expr ')' '{' . '}'  (28)
+
+	CASE  shift 217
+	DEFAULT  shift 218
+	'}'  shift 219
+	.  error
+
+	switch_clauses  goto 220
+	switch_clause  goto 221
+
+
+state 212
+	_if_stmt : IF '(' expr ')' $$10 . compound_stmt  (32)
+
+	'{'  shift 161
+	.  error
+
+	compound_stmt  goto 222
+
+
+state 213
+	while_stmt : WHILE '(' $$6 expr $$7 . ')' compound_stmt  (23)
+
+	')'  shift 223
+	.  error
+
+
+state 214
+	for_stmt : FOR '(' expr ';' $$3 . expr ';' $$4 expr ')' $$5 compound_stmt  (20)
+
+	NUL  shift 40
+	ID  shift 41
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	FLOAT  shift 47
+	'('  shift 48
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 52
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	.  error
+
+	expr  goto 224
+	factor  goto 58
+	_expr  goto 59
+	array_subsc  goto 60
+
+
+state 215
+	while_stmt : DO $$8 compound_stmt WHILE '(' . expr $$9 ')' ';'  (26)
+
+	NUL  shift 40
+	ID  shift 41
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	FLOAT  shift 47
+	'('  shift 48
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 52
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	.  error
+
+	expr  goto 225
+	factor  goto 58
+	_expr  goto 59
+	array_subsc  goto 60
+
+
+state 216
+	func_decl : type ident '(' params ')' . ';'  (54)
+
+	';'  shift 105
+	.  error
+
+
+state 217
+	switch_clause : CASE . expr ':'  (35)
+	switch_clause : CASE . expr ':' stmts  (36)
+
+	NUL  shift 40
+	ID  shift 41
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	FLOAT  shift 47
+	'('  shift 48
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 52
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	.  error
+
+	expr  goto 226
+	factor  goto 58
+	_expr  goto 59
+	array_subsc  goto 60
+
+
+state 218
+	switch_clause : DEFAULT . ':'  (37)
+	switch_clause : DEFAULT . ':' stmts  (38)
+
+	':'  shift 227
+	.  error
+
+
+state 219
+	switch_stmt : SWITCH '(' expr ')' '{' '}' .  (28)
+
+	.  reduce 28
+
+
+state 220
+	switch_stmt : SWITCH '(' expr ')' '{' switch_clauses . '}'  (27)
+	switch_clauses : switch_clauses . switch_clause  (34)
+
+	CASE  shift 217
+	DEFAULT  shift 218
+	'}'  shift 228
+	.  error
+
+	switch_clause  goto 229
+
+
+state 221
+	switch_clauses : switch_clause .  (33)
+
+	.  reduce 33
+
+
+state 222
+	_if_stmt : IF '(' expr ')' $$10 compound_stmt .  (32)
+
+	.  reduce 32
+
+
+state 223
+	while_stmt : WHILE '(' $$6 expr $$7 ')' . compound_stmt  (23)
+
+	'{'  shift 161
+	.  error
+
+	compound_stmt  goto 230
+
+
+state 224
+	for_stmt : FOR '(' expr ';' $$3 expr . ';' $$4 expr ')' $$5 compound_stmt  (20)
+	expr : expr . '+' expr  (82)
+	expr : expr . '-' expr  (83)
+	expr : expr . '*' expr  (84)
+	expr : expr . '/' expr  (85)
+	expr : expr . '%' expr  (86)
+	expr : expr . '<' expr  (87)
+	expr : expr . '>' expr  (88)
+	expr : expr . NLT expr  (89)
+	expr : expr . NMT expr  (90)
+	expr : expr . EQ expr  (91)
+	expr : expr . NEQ expr  (92)
+	expr : expr . AND expr  (93)
+	expr : expr . OR expr  (94)
+	expr : expr . '^' expr  (95)
+	expr : expr . '&' expr  (96)
+	expr : expr . '|' expr  (97)
+	expr : expr . LS expr  (98)
+	expr : expr . RS expr  (99)
+
+	';'  shift 231
+	OR  shift 86
+	AND  shift 87
+	'|'  shift 88
+	'^'  shift 89
+	'&'  shift 90
+	EQ  shift 91
+	NEQ  shift 92
+	NLT  shift 93
+	NMT  shift 94
+	'<'  shift 95
+	'>'  shift 96
+	LS  shift 97
+	RS  shift 98
+	'+'  shift 99
+	'-'  shift 100
+	'*'  shift 101
+	'/'  shift 102
+	'%'  shift 103
+	.  error
+
+
+state 225
+	while_stmt : DO $$8 compound_stmt WHILE '(' expr . $$9 ')' ';'  (26)
+	expr : expr . '+' expr  (82)
+	expr : expr . '-' expr  (83)
+	expr : expr . '*' expr  (84)
+	expr : expr . '/' expr  (85)
+	expr : expr . '%' expr  (86)
+	expr : expr . '<' expr  (87)
+	expr : expr . '>' expr  (88)
+	expr : expr . NLT expr  (89)
+	expr : expr . NMT expr  (90)
+	expr : expr . EQ expr  (91)
+	expr : expr . NEQ expr  (92)
+	expr : expr . AND expr  (93)
+	expr : expr . OR expr  (94)
+	expr : expr . '^' expr  (95)
+	expr : expr . '&' expr  (96)
+	expr : expr . '|' expr  (97)
+	expr : expr . LS expr  (98)
+	expr : expr . RS expr  (99)
+	$$9 : .  (25)
+
+	OR  shift 86
+	AND  shift 87
+	'|'  shift 88
+	'^'  shift 89
+	'&'  shift 90
+	EQ  shift 91
+	NEQ  shift 92
+	NLT  shift 93
+	NMT  shift 94
+	'<'  shift 95
+	'>'  shift 96
+	LS  shift 97
+	RS  shift 98
+	'+'  shift 99
+	'-'  shift 100
+	'*'  shift 101
+	'/'  shift 102
+	'%'  shift 103
+	')'  reduce 25
+
+	$$9  goto 232
+
+
+state 226
+	switch_clause : CASE expr . ':'  (35)
+	switch_clause : CASE expr . ':' stmts  (36)
+	expr : expr . '+' expr  (82)
+	expr : expr . '-' expr  (83)
+	expr : expr . '*' expr  (84)
+	expr : expr . '/' expr  (85)
+	expr : expr . '%' expr  (86)
+	expr : expr . '<' expr  (87)
+	expr : expr . '>' expr  (88)
+	expr : expr . NLT expr  (89)
+	expr : expr . NMT expr  (90)
+	expr : expr . EQ expr  (91)
+	expr : expr . NEQ expr  (92)
+	expr : expr . AND expr  (93)
+	expr : expr . OR expr  (94)
+	expr : expr . '^' expr  (95)
+	expr : expr . '&' expr  (96)
+	expr : expr . '|' expr  (97)
+	expr : expr . LS expr  (98)
+	expr : expr . RS expr  (99)
+
+	':'  shift 233
+	OR  shift 86
+	AND  shift 87
+	'|'  shift 88
+	'^'  shift 89
+	'&'  shift 90
+	EQ  shift 91
+	NEQ  shift 92
+	NLT  shift 93
+	NMT  shift 94
+	'<'  shift 95
+	'>'  shift 96
+	LS  shift 97
+	RS  shift 98
+	'+'  shift 99
+	'-'  shift 100
+	'*'  shift 101
+	'/'  shift 102
+	'%'  shift 103
+	.  error
+
+
+state 227
+	switch_clause : DEFAULT ':' .  (37)
+	switch_clause : DEFAULT ':' . stmts  (38)
+
+	NUL  shift 40
+	RETURN  shift 153
+	BREAK  shift 154
+	CONTINUE  shift 155
+	SWITCH  shift 156
+	CONST  shift 1
+	SIGNED_OR_NOT  shift 2
+	LONG_OR_SHORT  shift 3
+	KEY_INT  shift 4
+	KEY_CHAR  shift 5
+	KEY_OTHER_TYPE  shift 6
+	ID  shift 41
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	IF  shift 157
+	WHILE  shift 158
+	FOR  shift 159
+	DO  shift 160
+	FLOAT  shift 47
+	'('  shift 48
+	'{'  shift 161
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 52
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	CASE  reduce 37
+	DEFAULT  reduce 37
+	'}'  reduce 37
+
+	_if_stmt  goto 162
+	stmts  goto 234
+	_stmt  goto 164
+	for_stmt  goto 165
+	compound_stmt  goto 166
+	while_stmt  goto 167
+	switch_stmt  goto 168
+	if_stmt  goto 169
+	stmt  goto 170
+	var_decl  goto 171
+	func_decl  goto 172
+	scalar_decl  goto 173
+	array_decl  goto 174
+	type  goto 175
+	type1  goto 14
+	type0  goto 15
+	expr  goto 176
+	factor  goto 58
+	_expr  goto 59
+	array_subsc  goto 60
+
+
+state 228
+	switch_stmt : SWITCH '(' expr ')' '{' switch_clauses '}' .  (27)
+
+	.  reduce 27
+
+
+state 229
+	switch_clauses : switch_clauses switch_clause .  (34)
+
+	.  reduce 34
+
+
+state 230
+	while_stmt : WHILE '(' $$6 expr $$7 ')' compound_stmt .  (23)
+
+	.  reduce 23
+
+
+state 231
+	for_stmt : FOR '(' expr ';' $$3 expr ';' . $$4 expr ')' $$5 compound_stmt  (20)
+	$$4 : .  (18)
+
+	.  reduce 18
+
+	$$4  goto 235
+
+
+state 232
+	while_stmt : DO $$8 compound_stmt WHILE '(' expr $$9 . ')' ';'  (26)
+
+	')'  shift 236
+	.  error
+
+
+state 233
+	switch_clause : CASE expr ':' .  (35)
+	switch_clause : CASE expr ':' . stmts  (36)
+
+	NUL  shift 40
+	RETURN  shift 153
+	BREAK  shift 154
+	CONTINUE  shift 155
+	SWITCH  shift 156
+	CONST  shift 1
+	SIGNED_OR_NOT  shift 2
+	LONG_OR_SHORT  shift 3
+	KEY_INT  shift 4
+	KEY_CHAR  shift 5
+	KEY_OTHER_TYPE  shift 6
+	ID  shift 41
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	IF  shift 157
+	WHILE  shift 158
+	FOR  shift 159
+	DO  shift 160
+	FLOAT  shift 47
+	'('  shift 48
+	'{'  shift 161
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 52
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	CASE  reduce 35
+	DEFAULT  reduce 35
+	'}'  reduce 35
+
+	_if_stmt  goto 162
+	stmts  goto 237
+	_stmt  goto 164
+	for_stmt  goto 165
+	compound_stmt  goto 166
+	while_stmt  goto 167
+	switch_stmt  goto 168
+	if_stmt  goto 169
+	stmt  goto 170
+	var_decl  goto 171
+	func_decl  goto 172
+	scalar_decl  goto 173
+	array_decl  goto 174
+	type  goto 175
+	type1  goto 14
+	type0  goto 15
+	expr  goto 176
+	factor  goto 58
+	_expr  goto 59
+	array_subsc  goto 60
+
+
+state 234
+	stmts : stmts . _stmt  (14)
+	switch_clause : DEFAULT ':' stmts .  (38)
+
+	NUL  shift 40
+	RETURN  shift 153
+	BREAK  shift 154
+	CONTINUE  shift 155
+	SWITCH  shift 156
+	CONST  shift 1
+	SIGNED_OR_NOT  shift 2
+	LONG_OR_SHORT  shift 3
+	KEY_INT  shift 4
+	KEY_CHAR  shift 5
+	KEY_OTHER_TYPE  shift 6
+	ID  shift 41
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	IF  shift 157
+	WHILE  shift 158
+	FOR  shift 159
+	DO  shift 160
+	FLOAT  shift 47
+	'('  shift 48
+	'{'  shift 161
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 52
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	CASE  reduce 38
+	DEFAULT  reduce 38
+	'}'  reduce 38
+
+	_if_stmt  goto 162
+	_stmt  goto 191
+	for_stmt  goto 165
+	compound_stmt  goto 166
+	while_stmt  goto 167
+	switch_stmt  goto 168
+	if_stmt  goto 169
+	stmt  goto 170
+	var_decl  goto 171
+	func_decl  goto 172
+	scalar_decl  goto 173
+	array_decl  goto 174
+	type  goto 175
+	type1  goto 14
+	type0  goto 15
+	expr  goto 176
+	factor  goto 58
+	_expr  goto 59
+	array_subsc  goto 60
+
+
+state 235
+	for_stmt : FOR '(' expr ';' $$3 expr ';' $$4 . expr ')' $$5 compound_stmt  (20)
+
+	NUL  shift 40
+	ID  shift 41
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	FLOAT  shift 47
+	'('  shift 48
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 52
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	.  error
+
+	expr  goto 238
+	factor  goto 58
+	_expr  goto 59
+	array_subsc  goto 60
+
+
+state 236
+	while_stmt : DO $$8 compound_stmt WHILE '(' expr $$9 ')' . ';'  (26)
+
+	';'  shift 239
+	.  error
+
+
+state 237
+	stmts : stmts . _stmt  (14)
+	switch_clause : CASE expr ':' stmts .  (36)
+
+	NUL  shift 40
+	RETURN  shift 153
+	BREAK  shift 154
+	CONTINUE  shift 155
+	SWITCH  shift 156
+	CONST  shift 1
+	SIGNED_OR_NOT  shift 2
+	LONG_OR_SHORT  shift 3
+	KEY_INT  shift 4
+	KEY_CHAR  shift 5
+	KEY_OTHER_TYPE  shift 6
+	ID  shift 41
+	STRING  shift 42
+	CHAR  shift 43
+	DIGITAL_WRITE  shift 44
+	DELAY  shift 45
+	INT  shift 46
+	IF  shift 157
+	WHILE  shift 158
+	FOR  shift 159
+	DO  shift 160
+	FLOAT  shift 47
+	'('  shift 48
+	'{'  shift 161
+	'&'  shift 49
+	'+'  shift 50
+	'-'  shift 51
+	'*'  shift 52
+	INC  shift 53
+	DEC  shift 54
+	'!'  shift 55
+	'~'  shift 56
+	CASE  reduce 36
+	DEFAULT  reduce 36
+	'}'  reduce 36
+
+	_if_stmt  goto 162
+	_stmt  goto 191
+	for_stmt  goto 165
+	compound_stmt  goto 166
+	while_stmt  goto 167
+	switch_stmt  goto 168
+	if_stmt  goto 169
+	stmt  goto 170
+	var_decl  goto 171
+	func_decl  goto 172
+	scalar_decl  goto 173
+	array_decl  goto 174
+	type  goto 175
+	type1  goto 14
+	type0  goto 15
+	expr  goto 176
+	factor  goto 58
+	_expr  goto 59
+	array_subsc  goto 60
+
+
+state 238
+	for_stmt : FOR '(' expr ';' $$3 expr ';' $$4 expr . ')' $$5 compound_stmt  (20)
+	expr : expr . '+' expr  (82)
+	expr : expr . '-' expr  (83)
+	expr : expr . '*' expr  (84)
+	expr : expr . '/' expr  (85)
+	expr : expr . '%' expr  (86)
+	expr : expr . '<' expr  (87)
+	expr : expr . '>' expr  (88)
+	expr : expr . NLT expr  (89)
+	expr : expr . NMT expr  (90)
+	expr : expr . EQ expr  (91)
+	expr : expr . NEQ expr  (92)
+	expr : expr . AND expr  (93)
+	expr : expr . OR expr  (94)
+	expr : expr . '^' expr  (95)
+	expr : expr . '&' expr  (96)
+	expr : expr . '|' expr  (97)
+	expr : expr . LS expr  (98)
+	expr : expr . RS expr  (99)
+
+	')'  shift 240
+	OR  shift 86
+	AND  shift 87
+	'|'  shift 88
+	'^'  shift 89
+	'&'  shift 90
+	EQ  shift 91
+	NEQ  shift 92
+	NLT  shift 93
+	NMT  shift 94
+	'<'  shift 95
+	'>'  shift 96
+	LS  shift 97
+	RS  shift 98
+	'+'  shift 99
+	'-'  shift 100
+	'*'  shift 101
+	'/'  shift 102
+	'%'  shift 103
+	.  error
+
+
+state 239
+	while_stmt : DO $$8 compound_stmt WHILE '(' expr $$9 ')' ';' .  (26)
+
+	.  reduce 26
+
+
+state 240
+	for_stmt : FOR '(' expr ';' $$3 expr ';' $$4 expr ')' . $$5 compound_stmt  (20)
+	$$5 : .  (19)
+
+	.  reduce 19
+
+	$$5  goto 241
+
+
+state 241
+	for_stmt : FOR '(' expr ';' $$3 expr ';' $$4 expr ')' $$5 . compound_stmt  (20)
+
+	'{'  shift 161
+	.  error
+
+	compound_stmt  goto 242
+
+
+state 242
+	for_stmt : FOR '(' expr ';' $$3 expr ';' $$4 expr ')' $$5 compound_stmt .  (20)
+
+	.  reduce 20
+
+
+65 terminals, 46 nonterminals
+130 grammar rules, 243 states
+
+grammar parser grammar
+symbol# value# symbol
+     0      0  $end
+     1    256  error
+     2    257  NONE
+     3    258  NUL
+     4    259  RETURN
+     5    260  BREAK
+     6    261  CONTINUE
+     7    262  CASE
+     8    263  SWITCH
+     9    264  DEFAULT
+    10    265  CONST
+    11    266  SIGNED_OR_NOT
+    12    267  LONG_OR_SHORT
+    13    268  KEY_INT
+    14    269  KEY_CHAR
+    15    270  KEY_OTHER_TYPE
+    16    271  ID
+    17    272  STRING
+    18    273  CHAR
+    19    274  DIGITAL_WRITE
+    20    275  DELAY
+    21    276  INT
+    22    277  HIGH_LOW
+    23    278  IF
+    24    279  ELSE
+    25    280  WHILE
+    26    281  FOR
+    27    282  DO
+    28    283  FLOAT
+    29     44  ','
+    30     40  '('
+    31     41  ')'
+    32     58  ':'
+    33     59  ';'
+    34     91  '['
+    35     93  ']'
+    36    123  '{'
+    37    125  '}'
+    38    284  PREC_IF
+    39    285  PREC_IFELSE
+    40    286  PREC_SWITCH
+    41     61  '='
+    42    287  OR
+    43    288  AND
+    44    124  '|'
+    45     94  '^'
+    46     38  '&'
+    47    289  EQ
+    48    290  NEQ
+    49    291  NLT
+    50    292  NMT
+    51     60  '<'
+    52     62  '>'
+    53    293  LS
+    54    294  RS
+    55     43  '+'
+    56     45  '-'
+    57     42  '*'
+    58     47  '/'
+    59     37  '%'
+    60    295  PREC_2
+    61    296  INC
+    62    297  DEC
+    63     33  '!'
+    64    126  '~'
+    65    298  $accept
+    66    299  end
+    67    300  _if_stmt
+    68    301  call_params
+    69    302  param
+    70    303  _params
+    71    304  params
+    72    305  _end
+    73    306  stmts
+    74    307  _stmt
+    75    308  for_stmt
+    76    309  compound_stmt
+    77    310  while_stmt
+    78    311  switch_stmt
+    79    312  if_stmt
+    80    313  switch_clauses
+    81    314  switch_clause
+    82    315  stmt
+    83    316  var_decl
+    84    317  func_def
+    85    318  func_decl
+    86    319  scalar_decl
+    87    320  array_decl
+    88    321  idents
+    89    322  _ident
+    90    323  array
+    91    324  compound_stmt_func
+    92    325  ident
+    93    326  type
+    94    327  type1
+    95    328  type0
+    96    329  expr
+    97    330  factor
+    98    331  _expr
+    99    332  array_subsc
+   100    333  $$1
+   101    334  $$2
+   102    335  $$3
+   103    336  $$4
+   104    337  $$5
+   105    338  $$6
+   106    339  $$7
+   107    340  $$8
+   108    341  $$9
+   109    342  $$10
+   110    343  $$11

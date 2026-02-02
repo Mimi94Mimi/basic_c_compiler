@@ -5,8 +5,6 @@ void codegen() {
   int *b = &a; /* *b = -64 */
   *b = -a / 8; /* a = 8, *b = 8 */
   a = *b - 4; /* a = 4, *b = 4 */
-  digitalWrite(28, HIGH);
-  delay(a * 1000);
-  digitalWrite(28, LOW);
-  delay(*b * 1000);
+  output(a); /* output 4 */
+  output(*b); /* output 4 */
 }

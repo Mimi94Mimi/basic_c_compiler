@@ -233,13 +233,6 @@ addi sp, sp, -4
 lw t0, 0(sp)
 addi sp, sp, 4
 bne t0, zero, DW1
-li t0, 28
-sw t0, -4(sp)
-addi sp, sp, -4
-lw a0, 0(sp)
-addi sp, sp, 4
-li a1, 1
-jal ra, digitalWrite
 li t0, 6
 sw t0, -4(sp)
 addi sp, sp, -4
@@ -269,26 +262,9 @@ addi sp, sp, 4
 sub t0, t0, t1
 sw t0, -4(sp)
 addi sp, sp, -4
-li t0, 1000
-sw t0, -4(sp)
-addi sp, sp, -4
-lw t0, 0(sp)
-addi sp, sp, 4
-lw t1, 0(sp)
-addi sp, sp, 4
-mul t0, t0, t1
-sw t0, -4(sp)
-addi sp, sp, -4
 lw a0, 0(sp)
 addi sp, sp, 4
-jal ra, delay
-li t0, 28
-sw t0, -4(sp)
-addi sp, sp, -4
-lw a0, 0(sp)
-addi sp, sp, 4
-li a1, 0
-jal ra, digitalWrite
+jal ra, output
 li t0, 5
 sw t0, -4(sp)
 addi sp, sp, -4
@@ -318,19 +294,9 @@ addi sp, sp, 4
 sub t0, t0, t1
 sw t0, -4(sp)
 addi sp, sp, -4
-li t0, 1000
-sw t0, -4(sp)
-addi sp, sp, -4
-lw t0, 0(sp)
-addi sp, sp, 4
-lw t1, 0(sp)
-addi sp, sp, 4
-mul t0, t0, t1
-sw t0, -4(sp)
-addi sp, sp, -4
 lw a0, 0(sp)
 addi sp, sp, 4
-jal ra, delay
+jal ra, output
 codegen_end:
 addi sp, s0, -200
 lw ra, 196(sp)
