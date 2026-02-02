@@ -14,6 +14,7 @@ char* argument_id[10];
 int is_arg_pointer[10] = {0};
 int argument_cnt = 0;
 char* cur_func = NULL;
+struct symbol_entry table[MAX_TABLE_SIZE];
 
 char *copys(char* s){
     int sz = strlen(s) + 1;

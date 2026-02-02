@@ -22,75 +22,75 @@ tc1: clean
 	flex scanner.l
 	byacc -v -d parser.y
 	gcc -o parser lex.yy.c y.tab.c code.c
-	./parser < ../Testcase/Basic/0.c > ../Testcase/Basic/codegen.S
+	./parser < ../Testcase/Basic/0.c > ../Testcase/Basic/0.S
 
 tc1_exec:
-	rm -rf ../Testcase/Basic/tc1_prog
-	riscv32-unknown-elf-gcc -o ../Testcase/Basic/tc1_prog ../main.c ../Testcase/Basic/codegen.S
-	qemu-riscv32 ../Testcase/Basic/tc1_prog
+	rm -rf ../Testcase/Basic/0_prog
+	riscv32-unknown-elf-gcc -o ../Testcase/Basic/0_prog ./main.c ../Testcase/Basic/0.S
+	qemu-riscv32 ../Testcase/Basic/0_prog
 
 tc2_0: clean
 	flex scanner.l
 	byacc -v -d parser.y
 	gcc -o parser lex.yy.c y.tab.c code.c
-	./parser < ../Testcase/ArithmeticExpression/0.c > ../Testcase/ArithmeticExpression/codegen.S
+	./parser < ../Testcase/ArithmeticExpression/0.c > ../Testcase/ArithmeticExpression/0.S
 
 tc2_0_exec:
-	rm -rf ../Testcase/ArithmeticExpression/tc2_0_prog
-	riscv32-unknown-elf-gcc -o ../Testcase/ArithmeticExpression/tc2_0_prog ../main.c ../Testcase/ArithmeticExpression/codegen.S
-	qemu-riscv32 ../Testcase/ArithmeticExpression/tc2_0_prog
+	rm -rf ../Testcase/ArithmeticExpression/0_prog
+	riscv32-unknown-elf-gcc -o ../Testcase/ArithmeticExpression/0_prog ./main.c ../Testcase/ArithmeticExpression/0.S
+	qemu-riscv32 ../Testcase/ArithmeticExpression/0_prog
 
 tc2_1: clean
 	flex scanner.l
 	byacc -v -d parser.y
 	gcc -o parser lex.yy.c y.tab.c code.c
-	./parser < ../Testcase/ArithmeticExpression/1.c > ../Testcase/ArithmeticExpression/codegen.S
+	./parser < ../Testcase/ArithmeticExpression/1.c > ../Testcase/ArithmeticExpression/1.S
 
 tc2_1_exec:
-	rm -rf ../Testcase/ArithmeticExpression/tc2_1_prog
-	riscv32-unknown-elf-gcc -o ../Testcase/ArithmeticExpression/tc2_1_prog ../main.c ../Testcase/ArithmeticExpression/codegen.S
-	qemu-riscv32 ../Testcase/ArithmeticExpression/tc2_1_prog
+	rm -rf ../Testcase/ArithmeticExpression/1_prog
+	riscv32-unknown-elf-gcc -o ../Testcase/ArithmeticExpression/1_prog ./main.c ../Testcase/ArithmeticExpression/1.S
+	qemu-riscv32 ../Testcase/ArithmeticExpression/1_prog
 
 tc3_0: clean
 	flex scanner.l
 	byacc -v -d parser.y
 	gcc -o parser lex.yy.c y.tab.c code.c
-	./parser < ../Testcase/Pointer/0.c > ../Testcase/Pointer/codegen.S
+	./parser < ../Testcase/Pointer/0.c > ../Testcase/Pointer/0.S
 
 tc3_0_exec:
-	rm -rf ../Testcase/Pointer/tc3_0_prog
-	riscv32-unknown-elf-gcc -o ../Testcase/Pointer/tc3_0_prog ../main.c ../Testcase/Pointer/codegen.S
-	qemu-riscv32 ../Testcase/Pointer/tc3_0_prog
+	rm -rf ../Testcase/Pointer/0_prog
+	riscv32-unknown-elf-gcc -o ../Testcase/Pointer/0_prog ./main.c ../Testcase/Pointer/0.S
+	qemu-riscv32 ../Testcase/Pointer/0_prog
 
 tc3_1: clean
 	flex scanner.l
 	byacc -v -d parser.y
 	gcc -o parser lex.yy.c y.tab.c code.c
-	./parser < ../Testcase/Pointer/1.c > ../Testcase/Pointer/codegen.S
+	./parser < ../Testcase/Pointer/1.c > ../Testcase/Pointer/1.S
 
 tc3_1_exec:
-	rm -rf ../Testcase/Pointer/tc3_1_prog
-	riscv32-unknown-elf-gcc -o ../Testcase/Pointer/tc3_1_prog ../main.c ../Testcase/Pointer/codegen.S
-	qemu-riscv32 ../Testcase/Pointer/tc3_1_prog
+	rm -rf ../Testcase/Pointer/1_prog
+	riscv32-unknown-elf-gcc -o ../Testcase/Pointer/1_prog ./main.c ../Testcase/Pointer/1.S
+	qemu-riscv32 ../Testcase/Pointer/1_prog
 
 tc4_0: clean
 	flex scanner.l
 	byacc -v -d parser.y
 	gcc -o parser lex.yy.c y.tab.c code.c
-	./parser < ../Testcase/Jump/0.c > ../Testcase/Jump/codegen.S
+	./parser < ../Testcase/Jump/0.c > ../Testcase/Jump/0.S
 
 tc4_0_exec:
-	rm -rf ../Testcase/Jump/tc4_0_prog
-	riscv32-unknown-elf-gcc -o ../Testcase/Jump/tc4_0_prog ../main.c ../Testcase/Jump/codegen.S
-	qemu-riscv32 ../Testcase/Jump/tc4_0_prog
+	rm -rf ../Testcase/Jump/0_prog
+	riscv32-unknown-elf-gcc -o ../Testcase/Jump/0_prog ./main.c ../Testcase/Jump/0.S
+	qemu-riscv32 ../Testcase/Jump/0_prog
 
 tc4_1: clean
 	flex scanner.l
 	byacc -v -d parser.y
 	gcc -o parser lex.yy.c y.tab.c code.c
-	./parser < ../Testcase/Jump/1.c > ../Testcase/Jump/codegen.S
+	./parser < ../Testcase/Jump/1.c > ../Testcase/Jump/1.S
 
 tc4_1_exec:
-	rm -rf ../Testcase/Jump/tc4_1_prog
-	riscv32-unknown-elf-gcc -o ../Testcase/Jump/tc4_1_prog ../main.c ../Testcase/Jump/codegen.S
-	qemu-riscv32 ../Testcase/Jump/tc4_1_prog
+	rm -rf ../Testcase/Jump/1_prog
+	riscv32-unknown-elf-gcc -o ../Testcase/Jump/1_prog ./main.c ../Testcase/Jump/1.S
+	qemu-riscv32 ../Testcase/Jump/1_prog

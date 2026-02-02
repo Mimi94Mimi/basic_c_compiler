@@ -25,7 +25,9 @@ struct symbol_entry {
     int total_locals;
     id_mode mode;
     int has_return_value;
-} table[MAX_TABLE_SIZE];
+};
+
+extern struct symbol_entry table[MAX_TABLE_SIZE];
 
 extern int cur_scope;
 extern int cur_counter;
