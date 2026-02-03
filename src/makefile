@@ -3,8 +3,6 @@ all: clean
 	byacc -v -d parser.y
 	gcc -o codegen lex.yy.c y.tab.c code.c
 	./codegen < test.c > codegen.S
-
-exec:
 	rm -rf output_prog
 	riscv32-unknown-elf-gcc -o output_prog main.c codegen.S
 	qemu-riscv32 output_prog
