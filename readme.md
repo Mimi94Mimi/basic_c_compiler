@@ -104,3 +104,6 @@ Navigate to the `src/` directory and use the following make commands to automate
 
 **Verification of Results**  
 Upon execution, the program will display the output through the `output()` function defined in `main.c.` You should compare the printed values with the expected results defined in each test case to ensure the compiler's logic is correct.
+
+## Showcase
+All the tested C code and the assembly codes generated from them are avalible in `Testcase/<testcase_type>` folder.
